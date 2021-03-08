@@ -1,0 +1,195 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_app/LessonInfo.dart';
+import 'package:flutter_app/ModulePage.dart';
+import 'package:flutter_app/classes/firestore_services.dart';
+import 'package:flutter_app/Tasks.dart';
+import 'package:flutter_app/screens/LessonPage.dart';
+import 'dart:collection';
+import 'dart:io' as io;
+import 'package:intl/intl.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:path_provider/path_provider.dart';
+
+var path;
+String lessonName;
+var bigLesson;
+
+class Lessons extends StatefulWidget {
+  Lessons({Key key, this.LessonID, this.LessonName}) : super(key: key);
+  // always marked "final".
+  final String LessonName;
+  final String LessonID ;
+
+  //final String courseId;
+
+  @override
+  _LessonsState createState() => _LessonsState();
+}
+
+class _LessonsState extends State<Lessons> {
+  @override
+  Widget build(BuildContext context) {
+    var modulePath = userPath.collection('Courses').doc(modName).collection('Modules').doc(widget.LessonName);
+    path = modulePath;
+    lessonName = widget.LessonName;
+    return Scaffold(
+      appBar: AppBar(
+          title: Text(
+            widget.LessonName + " Lessons",
+            style: TextStyle(fontSize: 18),
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.refresh),
+              tooltip: 'refresh courses',
+              onPressed: () {
+                setState(() {}) ;
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.add),
+              tooltip: 'add course',
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => new CreateLesson()));
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                print("Stupid Debug Flag.");
+              },
+            ),
+          ]),
+      backgroundColor: Colors.white,
+
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            StreamBuilder<QuerySnapshot>(
+              stream: modulePath.collection('Lessons').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text("Loading");
+                }
+
+                return new ListView(
+                  shrinkWrap: true,
+                  children: snapshot.data.documents.map((DocumentSnapshot document) {
+                    return new ListTile(
+                      title: new Text(document.data()['name']),
+                      leading:  IconButton(
+                          icon: Icon(Icons.info),
+                          tooltip: 'Get Lesson Information',
+                          onPressed: () {
+                            setState(() {
+                            });
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => LessonInfo(
+                                lessonName: document.data()["name"],),
+                            )
+                            );}
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.arrow_right),
+                        tooltip: 'Get Lesson Information',
+                        onPressed: () {
+                          setState(() {
+                          });
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Tasks(
+                              taskName: document.data()["name"],),
+                          )
+                          );}
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+            SizedBox(height: 100),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CreateLesson extends StatelessWidget {
+  List<Widget> course;
+  TextEditingController nameEditingController = new TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text('Create Lesson')),
+        body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              verticalDirection: VerticalDirection.down,
+              children: <Widget>[
+                Column(
+                  children: [
+                    Container(
+                      child: TextField(
+                        keyboardType: TextInputType.text,
+                        maxLines: 1,
+                        autofocus: false,
+                        cursorColor: Colors.blue,
+                        maxLength: 10,
+                        maxLengthEnforced: true,
+                        controller: nameEditingController,
+                        decoration: InputDecoration(
+                          labelText: "Course Name",
+                          prefixIcon: Icon(Icons.folder),
+                          //Unfocus Text is grey
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          //Focued Text is blue
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: RaisedButton(
+                        child: Text("Create Course"),
+                        onPressed: () {
+                          DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+                          String date = dateFormat.format(DateTime.now());
+                          path.collection('Lessons').doc(nameEditingController.text.trim()).set(
+                              {
+                                "hasfeedback" : ['sQr40p3wdhVDJIbxBhZARzUHlEg1'],
+                                "completedlearners" : ['sQr40p3wdhVDJIbxBhZARzUHlEg1'],
+                                "learnerids" : ['sQr40p3wdhVDJIbxBhZARzUHlEg1'],
+                                "dateopen" : date,
+                                "dateclose" : "null",
+                                "designerid" : firebaseUser.uid,
+                                "isopen" : true,
+                                "id": nameEditingController.text.trim(),
+                                "name" : nameEditingController.text.trim(),
+                              }
+                          );
+                          Navigator.pop(context, nameEditingController.text);
+                        }),
+                  ),
+                ),
+              ],
+            )));
+  }
+}
