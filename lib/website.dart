@@ -1,6 +1,6 @@
-//NOTE: Create your website code and widgets here in website.dart.
-//NOTE: Create your website code and widgets here in website.dart.
+
 import 'package:flutter/material.dart';
+import 'package:flutter_app/courseInfo.dart';
 import 'package:flutter_app/authentication.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -104,6 +104,18 @@ class _FirstScreenState extends State<FirstScreen> {
                     return new ListTile(
                       title: new Text(document.data()['name']),
                       subtitle: new Text(document.data()['prefix']),
+                      leading:  IconButton(
+                          icon: Icon(Icons.info),
+                          tooltip: 'Get Lesson Information',
+                          onPressed: () {
+                            setState(() {
+                            });
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => courseInfo(
+                                courseName: document.data()["name"],),
+                            )
+                            );}
+                      ),
                       trailing: IconButton(
                         icon: Icon(Icons.arrow_right),
                         tooltip: 'Get Course Information',
@@ -218,7 +230,6 @@ class CreateCourse extends StatelessWidget {
                     maxLines: 1,
                     autofocus: false,
                     cursorColor: Colors.blue,
-                    maxLength: 10,
                     maxLengthEnforced: true,
                     controller: nameEditingController,
                     decoration: InputDecoration(
@@ -241,7 +252,7 @@ class CreateCourse extends StatelessWidget {
                     maxLines: 1,
                     autofocus: false,
                     cursorColor: Colors.blue,
-                    maxLength: 10,
+                    maxLength: 8,
                     maxLengthEnforced: true,
                     controller: prefixEditingController,
                     decoration: InputDecoration(
@@ -273,7 +284,7 @@ class CreateCourse extends StatelessWidget {
                           "dateopen" : date,
                           "designerid" : firebaseUser.uid,
                           "isopen" : true,
-                          "learnerids": ['sQr40p3wdhVDJIbxBhZARzUHlEg1'],
+                          "learnerids": [],
                           "id" : nameEditingController.text.trim(),
                           "name" : nameEditingController.text.trim(),
                           "prefix" : prefixEditingController.text.trim()
@@ -308,7 +319,6 @@ class CreateModule extends StatelessWidget {
                 maxLines: 1,
                 autofocus: false,
                 cursorColor: Colors.blue,
-                maxLength: 10,
                 maxLengthEnforced: true,
                 controller: textEditingController,
                 decoration: InputDecoration(

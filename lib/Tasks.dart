@@ -48,7 +48,7 @@ class _TasksState extends State<Tasks> {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-            widget.taskName + " Task",
+            widget.taskName + " Tasks",
             style: TextStyle(fontSize: 18),
           ),
           actions: <Widget>[
@@ -104,7 +104,9 @@ class _TasksState extends State<Tasks> {
                             });
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => taskInfo(
-                                taskName: document.data()["name"],),
+                                taskName: document.data()["name"],
+                                taskType: document.data()['tasktype'],
+                                mediaLink:document.data()["medialink"] ,),
                             )
                             );}
                       ),
@@ -127,7 +129,7 @@ class CreateTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Create Module')),
+        appBar: AppBar(title: Text('Create Task')),
         body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -141,11 +143,10 @@ class CreateTask extends StatelessWidget {
                         maxLines: 1,
                         autofocus: false,
                         cursorColor: Colors.blue,
-                        maxLength: 10,
                         maxLengthEnforced: true,
                         controller: nameEditingController,
                         decoration: InputDecoration(
-                          labelText: "Course Name",
+                          labelText: "Task Name",
                           prefixIcon: Icon(Icons.folder),
                           //Unfocus Text is grey
                           enabledBorder: UnderlineInputBorder(
@@ -164,7 +165,7 @@ class CreateTask extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: RaisedButton(
-                        child: Text("Create Course"),
+                        child: Text("Create Task"),
                         onPressed: () {
                           DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
                           String date = dateFormat.format(DateTime.now());

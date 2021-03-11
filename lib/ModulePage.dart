@@ -135,12 +135,11 @@ class CreateModule extends StatelessWidget {
                         maxLines: 1,
                         autofocus: false,
                         cursorColor: Colors.blue,
-                        maxLength: 10,
                         maxLengthEnforced: true,
                         controller: nameEditingController,
                         decoration: InputDecoration(
-                          labelText: "Course Name",
-                          prefixIcon: Icon(Icons.folder),
+                          labelText: "Module Name",
+                          prefixIcon: Icon(Icons.edit),
                           //Unfocus Text is grey
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -158,7 +157,7 @@ class CreateModule extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: RaisedButton(
-                        child: Text("Create Lesson"),
+                        child: Text("Create Module"),
                         onPressed: () {
                           DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
                           String date = dateFormat.format(DateTime.now());

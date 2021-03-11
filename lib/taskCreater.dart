@@ -20,7 +20,12 @@ import 'package:intl/intl.dart';
 // completed learner ids
 // turn all courses to open
 var taskPath = pathPasser;
+List<String>imageArr = <String>[];
+List <String>audioArr = <String>[];
 String name;
+String imageUrl;
+String mediaUrl;
+String audioUrl ;
 class taskCreater extends StatefulWidget {
   taskCreater({Key key}) : super(key: key);
 
@@ -97,7 +102,7 @@ class _creatorState extends State<taskCreater> {
               width: 500,
               elevation: 8.0,
               radius: 52.0,
-              text: "Constrained Perception Task",
+              text: "Constrained Production Task",
               background: Colors.black,
               onPressed: () {
                 Navigator.push(context,
@@ -109,7 +114,7 @@ class _creatorState extends State<taskCreater> {
               width: 500,
               elevation: 8.0,
               radius: 52.0,
-              text: "Unconstrained Perception Task",
+              text: "Unconstrained Production Task",
               background: Colors.black,
               onPressed: () {
                 Navigator.push(context,
@@ -135,6 +140,10 @@ class _Instruction extends State<Instruction> {
   List<PlatformFile> _paths;
   String _directoryPath;
   String _extension;
+  String imageUrl;
+  String videoUrl;
+  String audioUrl;
+  firebase_storage.Reference imageRef, audioRef;
   bool _loadingPath = false;
   bool _multiPick = false;
   FileType _pickingType = FileType.any;
@@ -146,47 +155,103 @@ class _Instruction extends State<Instruction> {
     _controller.addListener(() => _extension = _controller.text);
   }
 
-  void _openFileExplorer() async {
+  Future<String> _openFileImage() async {
     setState(() => _loadingPath = true);
-    try {
-      _directoryPath = null;
-      _paths = (await FilePicker.platform.pickFiles(
-        type: _pickingType,
-        allowMultiple: _multiPick,
-        allowedExtensions: (_extension?.isNotEmpty ?? false)
-            ? _extension?.replaceAll(' ', '')?.split(',')
-            : null,
-      ))
-          ?.files;
-    } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
-    } catch (ex) {
-      print(ex);
-    }
-    if (!mounted) return;
-    setState(() {
-      _loadingPath = false;
-      _fileName = _paths != null ? _paths.map((e) => e.name).toString() : '...';
-    });
-  }
-
-  void _clearCachedFiles() {
-    FilePicker.platform.clearTemporaryFiles().then((result) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: result ? Colors.green : Colors.red,
-          content: Text((result
-              ? 'Temporary files removed with success.'
-              : 'Failed to clean temporary files')),
-        ),
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['jpg', 'png'],
       );
-    });
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        var holder = ref.child(fileName);
+        if (holder != null)
+        {
+          await ref.putData(uploadfile);
+        }
+        imageUrl = await ref.getDownloadURL();
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
   }
 
-  void _selectFolder() {
-    FilePicker.platform.getDirectoryPath().then((value) {
-      setState(() => _directoryPath = value);
-    });
+  Future<String> _openFileAudio() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['wav', 'mp3', 'm4a'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        var holder = ref.child(fileName);
+        if (holder != null)
+        {
+          await ref.putData(uploadfile);
+        }
+        audioUrl = await ref.getDownloadURL();
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileMedia() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['mp4', 'mov', 'avi'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        var holder = ref.child(fileName);
+        if (holder != null)
+        {
+          await ref.putData(uploadfile);
+        }
+        videoUrl = await ref.getDownloadURL();
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
   }
   TextEditingController promptEditingController = new TextEditingController();
   TextEditingController wordEditingController = new TextEditingController();
@@ -210,25 +275,6 @@ class _Instruction extends State<Instruction> {
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-              child: Column(
-                children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () => _openFileExplorer(),
-                    child: const Text("Open file picker"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _selectFolder(),
-                    child: const Text("Pick folder"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _clearCachedFiles(),
-                    child: const Text("Clear temporary files"),
-                  ),
-                ],
-              ),
-            ),
 
             NiceButton(
               width: 500,
@@ -239,7 +285,6 @@ class _Instruction extends State<Instruction> {
               onPressed: () {
                 pathPasser.updateData(
                     {
-                      "orderid" : 1,
                       "tasktype" : "instruction",
                       "prompt" : promptEditingController.text.trim()
                     }
@@ -254,10 +299,140 @@ class _Instruction extends State<Instruction> {
   }
 }
 
-class instructionAdder extends StatelessWidget {
+class instructionAdder extends StatefulWidget {
+  @override
+  _instructionAdderState createState() => _instructionAdderState();
+}
+
+class _instructionAdderState extends State<instructionAdder> {
+
+  firebase_storage.Reference imageRef,  audioRef;
+  String imageUrl;
+  String videoUrl;
+  String audioUrl;
+  bool _loadingPath = false;
+
   TextEditingController wordEditingController = new TextEditingController();
+
   TextEditingController imageEditingController = new TextEditingController();
+
   TextEditingController mediaEditingController = new TextEditingController();
+
+  @override
+  void initState()
+  {
+    super.initState();
+  }
+
+  Future<String> _openFileImage() async {
+    String _imageUrl;
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['jpg', 'png'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        imageRef = ref;
+        try {
+          imageUrl = await ref.getDownloadURL();
+        }catch(e){
+          await ref.putData(uploadfile);
+          imageUrl = await ref.getDownloadURL();
+
+          print("file not found");
+        }
+
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileAudio() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['wav', 'mp3', 'm4a'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        audioRef = ref;
+        try {
+          setState(() async{
+            audioUrl = await ref.getDownloadURL();
+          });
+        }catch(e){
+          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
+          await ref.putData(uploadfile);
+          setState(() async{
+            audioUrl = await ref.getDownloadURL();
+          });
+        }
+        print(audioUrl);
+      }catch(e) {
+        print("catch");
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileMedia() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['mp4', 'mov', 'avi'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        var holder = ref.child(fileName);
+        if (holder == null)
+        {
+          await ref.putData(uploadfile);
+        }
+        videoUrl = await ref.getDownloadURL();
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -277,7 +452,7 @@ class instructionAdder extends StatelessWidget {
             ),
           ),
 
-          Container(
+          /*Container(
             padding: EdgeInsets.all(10),
             child: TextField(
               controller: mediaEditingController,
@@ -286,11 +461,9 @@ class instructionAdder extends StatelessWidget {
                 labelText: 'Media Link',
               ),
             ),
-          ),
+          ),*/
 
-
-
-          Container(
+          /*Container(
             padding: EdgeInsets.all(10),
             child: TextField(
               controller: imageEditingController,
@@ -298,6 +471,30 @@ class instructionAdder extends StatelessWidget {
                 border: OutlineInputBorder(),
                 labelText: 'Image Link (Optional)',
               ),
+            ),
+          ),*/
+
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+            child: Column(
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () async => await _openFileImage(),
+                  child: const Text("Open Image Picker"),
+                ),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+            child: Column(
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () async => await _openFileAudio(),
+                  child: const Text("Open Audio Picker"),
+                ),
+              ],
             ),
           ),
 
@@ -309,10 +506,20 @@ class instructionAdder extends StatelessWidget {
                 radius: 52.0,
                 text: " Submit",
                 background: Colors.black,
-                onPressed: () {
+                onPressed: () async{
+                  imageArr.add(await imageRef.getDownloadURL());
+                  audioArr.add(await audioRef.getDownloadURL());
                   pathPasser.updateData({'instructionwords': FieldValue.arrayUnion([wordEditingController.text.trim()])});
-                  pathPasser.updateData({'instructionmedias': FieldValue.arrayUnion([mediaEditingController.text.trim()])});
-                  pathPasser.updateData({'instructionimages': FieldValue.arrayUnion([imageEditingController.text.trim()])});
+                  pathPasser.update(
+                      {
+
+                        "instructionmedias": audioArr,
+                        "instructionimages" : imageArr,
+                      }
+
+                  );
+                  audioArr.clear();
+                  imageArr.clear();
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => Tasks(
                         taskName: namePasser),
@@ -325,13 +532,13 @@ class instructionAdder extends StatelessWidget {
                 width: 500,
                 elevation: 1.0,
                 radius: 52.0,
-                text: " Add More",
+                text: "Add More",
                 background: Colors.black,
-                onPressed: () {
+                onPressed: () async{
+                  imageArr.add(await imageRef.getDownloadURL());
+                  audioArr.add(await audioRef.getDownloadURL());
+                  print(imageArr);
                   pathPasser.updateData({'instructionwords': FieldValue.arrayUnion([wordEditingController.text.trim()])});
-                  pathPasser.updateData({'instructionmedias': FieldValue.arrayUnion([mediaEditingController.text.trim()])});
-                  pathPasser.updateData({'instructionimages': FieldValue.arrayUnion([imageEditingController.text.trim()])});
-
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => new instructionAdder()));
                 },
@@ -359,7 +566,11 @@ class _multipleChoice extends State<multipleChoice> {
   TextEditingController answer3EditingController = new TextEditingController();
   TextEditingController answer4EditingController = new TextEditingController();
   TextEditingController imageEditingController = new TextEditingController();
+  String imageUrl;
+  String mediaUrl;
+  String audioUrl ;
   String _fileName;
+  firebase_storage.Reference imageRef, audioRef;
   List<PlatformFile> _paths;
   String _directoryPath;
   String _extension;
@@ -367,6 +578,7 @@ class _multipleChoice extends State<multipleChoice> {
   bool _multiPick = false;
   FileType _pickingType = FileType.any;
   TextEditingController _controller = TextEditingController();
+  bool canContinue;
 
   @override
   void initState() {
@@ -374,13 +586,14 @@ class _multipleChoice extends State<multipleChoice> {
     _controller.addListener(() => _extension = _controller.text);
   }
 
-  void _openFileExplorer() async {
+  Future<String> _openFileImage() async {
+    String _imageUrl;
     setState(() => _loadingPath = true);
     FilePickerResult result;
     var url;
     try{
       result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['jpg', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'],
+        allowedExtensions: ['jpg', 'png'],
       );
     } catch(e)
     { print(e);
@@ -393,7 +606,88 @@ class _multipleChoice extends State<multipleChoice> {
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
         final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
-        ref.putData(uploadfile);
+        imageRef = ref;
+        try {
+          imageUrl = await ref.getDownloadURL();
+        }catch(e){
+          await ref.putData(uploadfile);
+          imageUrl = await ref.getDownloadURL();
+
+          print("file not found");
+        }
+
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileAudio() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['wav', 'mp3', 'm4a'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        audioRef = ref;
+        try {
+          setState(() async{
+            audioUrl = await ref.getDownloadURL();
+          });
+        }catch(e){
+          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
+          await ref.putData(uploadfile);
+          setState(() async{
+            audioUrl = await ref.getDownloadURL();
+          });
+        }
+        print(audioUrl);
+      }catch(e) {
+        print("catch");
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileMedia() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['mp4', 'mov', 'avi'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        var holder = ref.child(fileName);
+        if (holder == null)
+        {
+          await ref.putData(uploadfile);
+          print("file not found");
+        }
         url = await ref.getDownloadURL();
       }catch(e) {
         print(e);
@@ -422,7 +716,7 @@ class _multipleChoice extends State<multipleChoice> {
                   ),
                 ),
 
-                Container(
+               /* Container(
                   padding: EdgeInsets.all(10),
                   child: TextField(
                     controller: mediaEditingController,
@@ -431,6 +725,18 @@ class _multipleChoice extends State<multipleChoice> {
                       labelText: 'Media Link',
                     ),
                   ),
+                ),*/
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async => imageUrl = await _openFileImage(),
+                        child: const Text("Open Image Picker"),
+                      ),
+                    ],
+                  ),
                 ),
 
                 Padding(
@@ -438,63 +744,11 @@ class _multipleChoice extends State<multipleChoice> {
                   child: Column(
                     children: <Widget>[
                       ElevatedButton(
-                        onPressed: () => _openFileExplorer(),
-                        child: const Text("Open file picker"),
+                        onPressed: () async => audioUrl = await _openFileAudio(),
+                        child: const Text("Open Audio Picker"),
                       ),
                     ],
                   ),
-                ),
-
-                Builder(
-                  builder: (BuildContext context) => _loadingPath
-                      ? Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: const CircularProgressIndicator(),
-                  )
-                      : _directoryPath != null
-                      ? ListTile(
-                    title: const Text('Directory path'),
-                    subtitle: Text(_directoryPath),
-                  )
-                      : _paths != null
-                      ? Container(
-                    padding: const EdgeInsets.only(bottom: 30.0),
-                    height:
-                    MediaQuery.of(context).size.height * 0.50,
-                    child: Scrollbar(
-                        child: ListView.separated(
-                          itemCount:
-                          _paths != null && _paths.isNotEmpty
-                              ? _paths.length
-                              : 1,
-                          itemBuilder:
-                              (BuildContext context, int index) {
-                            final bool isMultiPath =
-                                _paths != null && _paths.isNotEmpty;
-                            final String name = 'File $index: ' +
-                                (isMultiPath
-                                    ? _paths
-                                    .map((e) => e.name)
-                                    .toList()[index]
-                                    : _fileName ?? '...');
-                            final path = _paths
-                                .map((e) => e.path)
-                                .toList()[index]
-                                .toString();
-
-                            return ListTile(
-                              title: Text(
-                                name,
-                              ),
-                              subtitle: Text(path),
-                            );
-                          },
-                          separatorBuilder:
-                              (BuildContext context, int index) =>
-                          const Divider(),
-                        )),
-                  )
-                      : const SizedBox(),
                 ),
 
                 Container(
@@ -540,7 +794,7 @@ class _multipleChoice extends State<multipleChoice> {
                   ),
                 ),
 
-                Container(
+                /*Container(
                   padding: EdgeInsets.all(10),
                   child: TextField(
                     controller: imageEditingController,
@@ -549,7 +803,7 @@ class _multipleChoice extends State<multipleChoice> {
                       labelText: 'Image Link (Optional)',
                     ),
                   ),
-                ),
+                ),*/
 
                 NiceButton(
                   width: 500,
@@ -557,17 +811,18 @@ class _multipleChoice extends State<multipleChoice> {
                   radius: 52.0,
                   text: " Submit",
                   background: Colors.black,
-                  onPressed: () {
+                  onPressed: () async{
+                    print(audioUrl);
+                    print(imageUrl);
                     pathPasser.updateData(
                         {
                           "retryflag": "NONE",
-                          "orderid" : 2,
-                          "medialink" : mediaEditingController.text.trim(),
+                          "medialink" : await audioRef.getDownloadURL(),
                           "tasktype" : "multiplechoice",
                           "multichoices": [correctEditingController.text.trim(), answer2EditingController.text.trim(),
                             answer3EditingController.text.trim(), answer4EditingController.text.trim()],
                           "correctchoice": correctEditingController.text.trim(),
-                          "imagelink" : imageEditingController.text.trim(),
+                          "imagelink" : await imageRef.getDownloadURL(),
                           "prompt" : promptEditingController.text.trim()
                         }
                     );
@@ -585,11 +840,124 @@ class _multipleChoice extends State<multipleChoice> {
   }
 }
 
-class freeText extends StatelessWidget {
+class freeText extends StatefulWidget {
+  @override
+  _freeTextState createState() => _freeTextState();
+}
+
+class _freeTextState extends State<freeText> {
   List<Widget> course;
+  String imageUrl;
+  String videoUrl;
+  String audioUrl;
+  firebase_storage.Reference imageRef, audioRef;
+  Future<String> _openFileImage() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['jpg', 'png'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        imageRef = ref;
+        try {
+          audioUrl = await ref.getDownloadURL();
+        }catch(e){
+          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
+          await ref.putData(uploadfile);
+
+          print("file not found");
+        }
+        imageUrl = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileAudio() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['wav', 'mp3', 'm4a'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        audioRef = ref;
+        try {
+          audioUrl = await ref.getDownloadURL();
+        }catch(e){
+          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
+          await ref.putData(uploadfile);
+
+          print("file not found");
+        }
+        audioUrl = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileMedia() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['mp4', 'mov', 'avi'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        await ref.putData(uploadfile);
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+  bool _loadingPath = false;
   TextEditingController promptEditingController = new TextEditingController();
+
   TextEditingController imageEditingController = new TextEditingController();
+
   TextEditingController mediaEditingController = new TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -609,7 +977,31 @@ class freeText extends StatelessWidget {
                   ),
                 ),
 
-                Container(
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async => imageUrl = await _openFileImage(),
+                        child: const Text("Open Image Picker"),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async => audioUrl = await _openFileAudio(),
+                        child: const Text("Open Audio Picker"),
+                      ),
+                    ],
+                  ),
+                ),
+
+                /*Container(
                   padding: EdgeInsets.all(10),
                   child: TextField(
                     controller: mediaEditingController,
@@ -629,7 +1021,7 @@ class freeText extends StatelessWidget {
                       labelText: 'Image Link (Optional)',
                     ),
                   ),
-                ),
+                ),*/
 
                 NiceButton(
                   width: 500,
@@ -637,12 +1029,12 @@ class freeText extends StatelessWidget {
                   radius: 52.0,
                   text: " Submit",
                   background: Colors.black,
-                  onPressed: () {
+                  onPressed: () async{
                     pathPasser.updateData(
                         {
-                          "medialink" : mediaEditingController.text.trim(),
+                          "medialink" : await audioRef.getDownloadURL(),
                           "tasktype" : "freetext",
-                          "imagelink" : imageEditingController.text.trim(),
+                          "imagelink" : await imageRef.getDownloadURL(),
                           "prompt" : promptEditingController.text.trim()
                         }
                     );
@@ -666,6 +1058,103 @@ class videoPerception extends StatefulWidget {
 class _videoPerception extends State<videoPerception> {
   List<Widget> course;
   String dropdownValue = "Free Text";
+  String imageUrl;
+  firebase_storage.Reference videoRef;
+  String videoUrl;
+  String audioUrl;
+  bool _loadingPath;
+  Future<String> _openFileImage() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['jpg', 'png'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        await ref.putData(uploadfile);
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileAudio() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['wav', 'mp3', 'm4a'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        await ref.putData(uploadfile);
+        imageUrl = await ref.getDownloadURL();
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileMedia() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['mp4', 'mov', 'avi'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        videoRef = ref;
+        try {
+          audioUrl = await ref.getDownloadURL();
+        }catch(e){
+          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
+          await ref.putData(uploadfile);
+
+          print("file not found");
+        }
+        videoUrl = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
   TextEditingController mediaEditingController = new TextEditingController();
   TextEditingController promptEditingController = new TextEditingController();
   TextEditingController correctEditingController = new TextEditingController();
@@ -702,6 +1191,17 @@ class _videoPerception extends State<videoPerception> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Question Prompt',
+                    ),
+                  ),
+                ),
+
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: mediaEditingController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Youtube Video Link',
                     ),
                   ),
                 ),
@@ -779,16 +1279,18 @@ class _videoPerception extends State<videoPerception> {
                   ),
                   visible: _visible,
                 ),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: mediaEditingController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Media Link',
-                    ),
+
+                /*Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async => videoUrl = await _openFileMedia(),
+                        child: const Text("Open Video Picker"),
+                      ),
+                    ],
                   ),
-                ),
+                ),*/
 
                 NiceButton(
                   width: 500,
@@ -834,11 +1336,117 @@ class _videoPerception extends State<videoPerception> {
   }
 }
 
-class constrainedProd extends StatelessWidget {
+class constrainedProd extends StatefulWidget {
+  @override
+  _constrainedProdState createState() => _constrainedProdState();
+}
+
+class _constrainedProdState extends State<constrainedProd> {
   List<Widget> course;
+  String imageUrl;
+  firebase_storage.Reference imageRef;
+  String videoUrl;
+  String audioUrl;
+  bool _loadingPath;
+  Future<String> _openFileImage() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['jpg', 'png'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        imageRef = ref;
+        try {
+          audioUrl = await ref.getDownloadURL();
+        }catch(e){
+          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
+          await ref.putData(uploadfile);
+
+          print("file not found");
+        }
+        imageUrl = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileAudio() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['wav', 'mp3', 'm4a'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        await ref.putData(uploadfile);
+        imageUrl = await ref.getDownloadURL();
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileMedia() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['mp4', 'mov', 'avi'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        await ref.putData(uploadfile);
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
   TextEditingController promptEditingController = new TextEditingController();
+
   TextEditingController correctEditingController = new TextEditingController();
+
   TextEditingController imageEditingController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -869,7 +1477,7 @@ class constrainedProd extends StatelessWidget {
                   ),
                 ),
 
-                Container(
+                /*Container(
                   padding: EdgeInsets.all(10),
                   child: TextField(
                     controller: imageEditingController,
@@ -877,6 +1485,17 @@ class constrainedProd extends StatelessWidget {
                       border: OutlineInputBorder(),
                       labelText: 'Image Link (Optional)',
                     ),
+                  ),
+                ),*/
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async => imageUrl = await _openFileImage(),
+                        child: const Text("Open Image Picker"),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -886,12 +1505,12 @@ class constrainedProd extends StatelessWidget {
                   radius: 52.0,
                   text: " Submit",
                   background: Colors.black,
-                  onPressed: () {
+                  onPressed: () async{
                     pathPasser.updateData(
                         {
                           "tasktype" : "constproduction",
                           "correctchoice" : correctEditingController.text.trim(),
-                          "imagelink" : imageEditingController.text.trim(),
+                          "imagelink" : await imageRef.getDownloadURL(),
                           "prompt" : promptEditingController.text.trim()
                         }
                     );
@@ -908,10 +1527,114 @@ class constrainedProd extends StatelessWidget {
   }
 }
 
-class unconstrainedProd extends StatelessWidget {
+class unconstrainedProd extends StatefulWidget {
+  @override
+  _unconstrainedProdState createState() => _unconstrainedProdState();
+}
+
+class _unconstrainedProdState extends State<unconstrainedProd> {
   List<Widget> course;
+  String imageUrl;
+  String videoUrl;
+  String audioUrl;
+  firebase_storage.Reference imageRef;
+  bool _loadingPath;
+  Future<String> _openFileImage() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['jpg', 'png'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        imageRef = ref;
+        try {
+          audioUrl = await ref.getDownloadURL();
+        }catch(e){
+          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
+          await ref.putData(uploadfile);
+
+          print("file not found");
+        }
+        imageUrl = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileAudio() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['wav', 'mp3', 'm4a'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        await ref.putData(uploadfile);
+        imageUrl = await ref.getDownloadURL();
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
+
+  Future<String> _openFileMedia() async {
+    setState(() => _loadingPath = true);
+    FilePickerResult result;
+    var url;
+    try{
+      result = await FilePicker.platform.pickFiles(type: FileType.custom,
+        allowedExtensions: ['mp4', 'mov', 'avi'],
+      );
+    } catch(e)
+    { print(e);
+    }
+    if(result != null) {
+      try{
+        print(result.files.single.name);
+        print(result.files.single.size);
+        print(result.files.single.extension);
+        Uint8List uploadfile = result.files.single.bytes;
+        String fileName = result.files.single.name;
+        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        await ref.putData(uploadfile);
+        url = await ref.getDownloadURL();
+      }catch(e) {
+        print(e);
+      }
+      return url;
+    }
+  }
   TextEditingController promptEditingController = new TextEditingController();
+
   TextEditingController imageEditingController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -932,14 +1655,15 @@ class unconstrainedProd extends StatelessWidget {
                 ),
 
 
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: imageEditingController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Image Link (Optional)',
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async => imageUrl = await _openFileImage(),
+                        child: const Text("Open Image Picker"),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -949,11 +1673,11 @@ class unconstrainedProd extends StatelessWidget {
                   radius: 52.0,
                   text: " Submit",
                   background: Colors.black,
-                  onPressed: () {
+                  onPressed: () async{
                     pathPasser.updateData(
                         {
                           "tasktype" : "unconstproduction",
-                          "imagelink" : imageEditingController.text.trim(),
+                          "imagelink" : await imageRef.getDownloadURL(),
                           "prompt" : promptEditingController.text.trim()
                         }
                     );

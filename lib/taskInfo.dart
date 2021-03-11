@@ -40,9 +40,11 @@ import 'package:path_provider/path_provider.dart';
 
 var infoPath;
 class taskInfo extends StatefulWidget {
-  taskInfo({Key key, this.taskName}) : super(key: key);
+  taskInfo({Key key, this.taskName, this.taskType, this.mediaLink}) : super(key: key);
   // always marked "final".
   final String taskName;
+  final String taskType;
+  final String mediaLink;
 
   //final String courseId;
 
@@ -58,7 +60,7 @@ class _infoState extends State<taskInfo> {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-            widget.taskName + " Task",
+            widget.taskName + " Learner Responses",
             style: TextStyle(fontSize: 18),
           ),
           actions: <Widget>[
@@ -105,7 +107,7 @@ class _infoState extends State<taskInfo> {
                   shrinkWrap: true,
                   children: snapshot.data.documents.map((DocumentSnapshot document) {
                     return new ListTile(
-                      title: new Text(document.data()['learnerid']),
+                      title: new Text(document.data()['firstname'] + ' ' +document.data()['lastname']),
                       trailing: IconButton(
                           icon: Icon(Icons.info),
                           tooltip: 'Get Learner Information',
@@ -114,7 +116,13 @@ class _infoState extends State<taskInfo> {
                             });
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => responses(
-                                learner: document.data()["learnerid"],),
+                                learner: document.data()['learnerid'],
+                                name: document.data()['firstname'] + ' ' +document.data()['lastname'],
+                                mediaLink: widget.mediaLink,
+                                answer: document.data()["learnerresponses"],
+                                asr: document.data()["asrfeedback"],
+                                type: widget.taskType
+                                ),
                             )
                             );}
                       ),

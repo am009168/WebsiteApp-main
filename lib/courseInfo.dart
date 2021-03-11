@@ -40,10 +40,10 @@ import 'package:path_provider/path_provider.dart';
 
 var infoGetter;
 String stuff ;
-class LessonInfo extends StatefulWidget {
-  LessonInfo({Key key, this.lessonName}) : super(key: key);
+class courseInfo extends StatefulWidget {
+  courseInfo({Key key, this.courseName}) : super(key: key);
   // always marked "final".
-  final String lessonName;
+  final String courseName;
 
   //final String courseId;
 
@@ -51,19 +51,19 @@ class LessonInfo extends StatefulWidget {
   _infoState createState() => _infoState();
 }
 
-class _infoState extends State<LessonInfo> {
+class _infoState extends State<courseInfo> {
   TextEditingController nameEditingController = new TextEditingController();
 
   @override
 
   Widget build(BuildContext context) {
-    infoGetter = userPath.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.lessonName);
+    infoGetter = coursePath.doc(widget.courseName);
 
 
     return Scaffold(
       appBar: AppBar(
           title: Text(
-            widget.lessonName + " Lesson",
+            widget.courseName + " Course",
             style: TextStyle(fontSize: 18),
           ),
           actions: <Widget>[
@@ -73,7 +73,7 @@ class _infoState extends State<LessonInfo> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Text("Add new user to Lesson "),
+            Text("Add new user to Course "),
             Container(
               child: TextField(
                 keyboardType: TextInputType.text,
@@ -95,7 +95,7 @@ class _infoState extends State<LessonInfo> {
                 ),
               ),
             ),
-            
+
             Container(
               child: Padding(
                 padding: EdgeInsets.all(16),
@@ -116,7 +116,7 @@ class _infoState extends State<LessonInfo> {
                               content: Text('Please enter a new email'),
                             )
                         );
-                        }
+                      }
                       Navigator.pop(context, nameEditingController.text);
                     }),
               ),
@@ -132,7 +132,6 @@ class _infoState extends State<LessonInfo> {
 Future<String> getIdByEmail(String email) async {
   final firestoreInstance = FirebaseFirestore.instance;
   var userRef;
-
   userRef = await firestoreInstance
       .collection('Users')
       .doc('UserList')

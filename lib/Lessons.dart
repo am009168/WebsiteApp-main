@@ -145,12 +145,11 @@ class CreateLesson extends StatelessWidget {
                         maxLines: 1,
                         autofocus: false,
                         cursorColor: Colors.blue,
-                        maxLength: 10,
                         maxLengthEnforced: true,
                         controller: nameEditingController,
                         decoration: InputDecoration(
-                          labelText: "Course Name",
-                          prefixIcon: Icon(Icons.folder),
+                          labelText: "Lesson Name",
+                          prefixIcon: Icon(Icons.edit),
                           //Unfocus Text is grey
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -168,15 +167,15 @@ class CreateLesson extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: RaisedButton(
-                        child: Text("Create Course"),
+                        child: Text("Create Lesson"),
                         onPressed: () {
                           DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
                           String date = dateFormat.format(DateTime.now());
                           path.collection('Lessons').doc(nameEditingController.text.trim()).set(
                               {
-                                "hasfeedback" : ['sQr40p3wdhVDJIbxBhZARzUHlEg1'],
-                                "completedlearners" : ['sQr40p3wdhVDJIbxBhZARzUHlEg1'],
-                                "learnerids" : ['sQr40p3wdhVDJIbxBhZARzUHlEg1'],
+                                "hasfeedback" : [],
+                                "completedlearners" : [],
+                                "learnerids" : [],
                                 "dateopen" : date,
                                 "dateclose" : "null",
                                 "designerid" : firebaseUser.uid,
