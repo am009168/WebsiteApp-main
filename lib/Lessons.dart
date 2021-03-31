@@ -9,12 +9,6 @@ import 'dart:io' as io;
 import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
 
 var path;
 String lessonName;
@@ -125,9 +119,46 @@ class _LessonsState extends State<Lessons> {
   }
 }
 
-class CreateLesson extends StatelessWidget {
+class CreateLesson extends StatefulWidget {
+  @override
+  _CreateLessonState createState() => _CreateLessonState();
+}
+
+class _CreateLessonState extends State<CreateLesson> {
   List<Widget> course;
+
   TextEditingController nameEditingController = new TextEditingController();
+
+  DateTime selectedDateOpen = DateTime.now();
+
+  DateTime selectedDateClose = DateTime.now();
+
+  bool value = false;
+
+  Future<Null> _selectDateOpen(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDateOpen,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDateOpen)
+      setState(() {
+        selectedDateOpen = picked;
+      });
+  }
+
+  Future<Null> _selectDateClose(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDateClose,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDateClose)
+      setState(() {
+        selectedDateClose = picked;
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,27 +194,85 @@ class CreateLesson extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Set Open Date and Close Date: ',
+                      style: TextStyle(fontSize: 17.0),
+                    ),
+                    SizedBox(width: 10),
+                    Checkbox(
+                      value: this.value,
+                      onChanged: (bool value) {
+                        setState(() {
+                          this.value = value;
+                        });
+                        print(value);
+                      },
+                    ),
+                  ],
+                ),
+                (value)
+                    ?Container(
+                  child: Column(
+                    children: [
+                      Text("Date open: " + "${selectedDateOpen.toLocal()}".split(' ')[0]),
+                      SizedBox(height: 20.0,),
+                      RaisedButton(
+                        onPressed: () => _selectDateOpen(context),
+                        child: Text('Select Open Date'),
+                      ),
+                      SizedBox(height: 50.0,),
+                      Text("Date close: " + "${selectedDateClose.toLocal()}".split(' ')[0]),
+                      SizedBox(height: 20.0,),
+                      RaisedButton(
+                        onPressed: () => _selectDateClose(context),
+                        child: Text('Select Close Date'),
+                      ),
+                    ],
+                  ),
+                ):Container(),
+
                 Container(
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: RaisedButton(
                         child: Text("Create Lesson"),
                         onPressed: () {
-                          DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-                          String date = dateFormat.format(DateTime.now());
-                          path.collection('Lessons').doc(nameEditingController.text.trim()).set(
-                              {
-                                "hasfeedback" : [],
-                                "completedlearners" : [],
-                                "learnerids" : [],
-                                "dateopen" : date,
-                                "dateclose" : "null",
-                                "designerid" : firebaseUser.uid,
-                                "isopen" : true,
-                                "id": nameEditingController.text.trim(),
-                                "name" : nameEditingController.text.trim(),
-                              }
-                          );
+                          if (value)
+                          {
+                            path.collection('Lessons').doc(nameEditingController.text.trim()).set(
+                                {
+                                  "hasfeedback" : [],
+                                  "completedlearners" : [],
+                                  "learnerids" : [],
+                                  "dateopen": selectedDateOpen.toString(),
+                                  "dateclose": selectedDateClose.toString(),
+                                  "designerid" : firebaseUser.uid,
+                                  "isopen" : true,
+                                  "id": nameEditingController.text.trim(),
+                                  "name" : nameEditingController.text.trim(),
+                                }
+                            );
+                          }
+                          else
+                          {
+                            path.collection('Lessons').doc(nameEditingController.text.trim()).set(
+                                {
+                                  "hasfeedback" : [],
+                                  "completedlearners" : [],
+                                  "learnerids" : [],
+                                  "dateopen" : "1999-01-21 15:00:00.000",
+                                  "dateclose" : "3021-01-21 15:00:00.000",
+                                  "designerid" : firebaseUser.uid,
+                                  "isopen" : true,
+                                  "id": nameEditingController.text.trim(),
+                                  "name" : nameEditingController.text.trim(),
+                                }
+                            );
+                          }
                           Navigator.pop(context, nameEditingController.text);
                         }),
                   ),

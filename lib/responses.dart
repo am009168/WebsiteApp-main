@@ -1,30 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ModulePage.dart';
-import 'package:flutter_app/Lessons.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_app/classes/firestore_services.dart';
-import 'package:flutter_app/taskCreater.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_app/models/Module.dart';
-import 'package:flutter_app/providers/module_provider.dart';
-import 'package:flutter_app/utils/session.dart';
-import 'package:flutter_app/main.dart';
+import 'dart:js' as js;
+import 'dart:html' as html;
+import 'package:universal_html/html.dart';
+import 'dart:convert';
+import 'package:csv/csv.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_app/Tasks.dart';
 import 'package:flutter_app/taskCreater.dart';
 import 'package:flutter_app/taskInfo.dart';
-import 'package:flutter_app/screens/LessonPage.dart';
-import 'dart:collection';
-import 'dart:io' as io;
-import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
+
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:nice_button/nice_button.dart';
 
 class responses extends StatefulWidget {
@@ -72,10 +60,26 @@ class _response extends State<responses> {
       });
     }
   }
-  @override
-  void initState() {
-    super.initState();
-    audioPlayer = AudioPlayer();
+
+  void generateCSV(){
+    List<String> rowHeader = ["Name","Address","Phone"];
+    List<List<dynamic>> rows = [];
+    rows.add(rowHeader); //Now lets add 5 data rows
+    for(int i=0;i<5;i++){ //everytime loop executes we need to add new row
+      List<dynamic> dataRow=[];
+      dataRow.add("NAME :$i");
+      dataRow.add("ADDRESS :$i");
+      dataRow.add("PHONE:$i");
+      rows.add(dataRow);
+    }//now convert our 2d array into the csvlist using the plugin of csv
+    String csv = const ListToCsvConverter().convert(rows);//this csv variable holds entire csv data
+    final bytes = utf8.encode(csv);//NOTE THAT HERE WE USED HTML PACKAGE
+    final blob = html.Blob([bytes]);//It will create downloadable object
+    final url = html.Url.createObjectUrlFromBlob(blob);//It will create anchor to download the file
+    final anchor = html.document.createElement('a')  as    html.AnchorElement..href = url..style.display = 'none'         ..download = 'yourcsvname.csv';       //finally add the csv anchor to body
+    html.document.body.children.add(anchor);// Cause download by calling this function
+    anchor.click();
+    html.Url.revokeObjectUrl(url);
   }
 
   void playRemote(String audioLink) async {
@@ -92,7 +96,7 @@ class _response extends State<responses> {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-            "Response from " +widget.learner,
+            "Response from " +widget.name,
             style: TextStyle(fontSize: 18),
           ),
           actions: <Widget>[
@@ -117,16 +121,24 @@ class _response extends State<responses> {
                 print("Stupid Debug Flag.");
               },
             ),
+            IconButton(
+              icon: Icon(Icons.file_copy),
+              onPressed: () {
+                print("Exporting.");
+
+              },
+            )
           ]),
       backgroundColor: Colors.white,
 
       body: Center(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text('Current Task ID: '),
-            StreamBuilder<QuerySnapshot>(
-              stream: infoPath.snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            new Text('Current Task ID:\n ' , style: TextStyle(fontWeight: FontWeight.bold),),
+            StreamBuilder<DocumentSnapshot>(
+              stream: infoPath.document(widget.learner).snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Something went wrong');
                 }
@@ -135,20 +147,18 @@ class _response extends State<responses> {
                   return Text("Loading");
                 }
 
-                return new ListView(
-                  shrinkWrap: true,
-                  children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    return new ListTile(
-                      title: new Text(document.data()['taskid']),
-                    );
-                  }).toList(),
-                );
+                if(snapshot.hasData)
+                {
+                  Map<String, dynamic> docField = snapshot.data.data();
+                  return Text(docField['taskid']);
+                }
+                return Text("error");
               },
             ),
-            new Text('Current Task Type:'),
-            StreamBuilder<QuerySnapshot>(
-              stream: infoPath.snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            new Text('\nCurrent Task Type:\n', style: TextStyle(fontWeight: FontWeight.bold)),
+            StreamBuilder<DocumentSnapshot>(
+              stream: infoPath.document(widget.learner).snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Something went wrong');
                 }
@@ -157,20 +167,18 @@ class _response extends State<responses> {
                   return Text("Loading");
                 }
 
-                return new ListView(
-                  shrinkWrap: true,
-                  children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    return new ListTile(
-                      title: new Text(document.data()['tasktype']),
-                    );
-                  }).toList(),
-                );
+                if(snapshot.hasData)
+                {
+                  Map<String, dynamic> docField = snapshot.data.data();
+                  return Text(docField['tasktype']);
+                }
+                return Text("error");
               },
             ),
-            new Text('Number of User Attempts:'),
-            StreamBuilder<QuerySnapshot>(
-              stream: infoPath.snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            new Text('\nNumber of User Attempts:\n', style: TextStyle(fontWeight: FontWeight.bold)),
+            StreamBuilder<DocumentSnapshot>(
+              stream: infoPath.document(widget.learner).snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Something went wrong');
                 }
@@ -179,20 +187,19 @@ class _response extends State<responses> {
                   return Text("Loading");
                 }
 
-                return new ListView(
-                  shrinkWrap: true,
-                  children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    return new ListTile(
-                      title: new Text(document.data()['attemptcount'].toString()),
-                    );
-                  }).toList(),
-                );
+                if(snapshot.hasData)
+                {
+                  Map<String, dynamic> docField = snapshot.data.data();
+                  return Text(docField['attemptcount'].toString());
+                }
+                return Text("error");
               },
             ),
             (widget.mediaLink != null)
             ?Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                new Text("Prompt"),
+                new Text("Prompt\n", style: TextStyle(fontWeight: FontWeight.bold)),
                 new SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -215,7 +222,7 @@ class _response extends State<responses> {
                 new SizedBox(height: 30),
               ],
             ):Container(),
-            new Text('Responses from Learner'),
+            new Text('\nResponses from Learner\n', style: TextStyle(fontWeight: FontWeight.bold)),
             Visibility(
               child: Column(
                   children: <Widget>[
@@ -255,22 +262,24 @@ class _response extends State<responses> {
                                                 color: Colors.blueAccent),
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            RaisedButton(
-                                              onPressed: () => playRemote(
-                                                  widget.answer[index]),
-                                              child: Icon(Icons.play_arrow),
-                                            ),
-                                            RaisedButton(
-                                              onPressed: () => audioPlayer.pause(),
-                                              child: Icon(Icons.pause),
-                                            ),
-                                            RaisedButton(
-                                              onPressed: () => audioPlayer.stop(),
-                                              child: Icon(Icons.stop),
-                                            ),
-                                          ],
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              RaisedButton(
+                                                onPressed: () => playRemote(
+                                                    widget.answer[index]),
+                                                child: Icon(Icons.play_arrow),
+                                              ),
+                                              RaisedButton(
+                                                onPressed: () => audioPlayer.pause(),
+                                                child: Icon(Icons.pause),
+                                              ),
+                                              RaisedButton(
+                                                onPressed: () => audioPlayer.stop(),
+                                                child: Icon(Icons.stop),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ]),
                                   SizedBox(
@@ -337,9 +346,9 @@ class _response extends State<responses> {
             Visibility(
               child: Column(
                   children: <Widget>[
-                    StreamBuilder<QuerySnapshot>(
-                      stream: infoPath.snapshots(),
-                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: infoPath.document(widget.learner).snapshots(),
+                      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                         if (snapshot.hasError) {
                           return Text('Something went wrong');
                         }
@@ -348,14 +357,12 @@ class _response extends State<responses> {
                           return Text("Loading");
                         }
 
-                        return new ListView(
-                          shrinkWrap: true,
-                          children: snapshot.data.docs.map((DocumentSnapshot document) {
-                            return new ListTile(
-                              title: new Text(document.data()['learnerresponses'].toString()),
-                            );
-                          }).toList(),
-                        );
+                        if(snapshot.hasData)
+                        {
+                          Map<String, dynamic> docField = snapshot.data.data();
+                          return Text(docField['learnerresponses'].toString());
+                        }
+                        return Text("error");
                       },
                     ),
                   ]
@@ -373,23 +380,25 @@ class _response extends State<responses> {
                 ),
               ),
             ),
-            NiceButton(
-              width: 500,
-              elevation: 1.0,
-              radius: 52.0,
-              text: " Submit",
-              background: Colors.black,
-              onPressed: () {
-                getterPath.updateData({'designerfeedback': imageEditingController.text.trim()});
-                showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: Text('Success!'),
-                      content: Text('Feedback to user has been submitted'),
-                    )
-                );
-                finPath.updateData({'hasfeedback': FieldValue.arrayUnion([widget.learner])});
-              },
+            Center(
+              child: NiceButton(
+                width: 500,
+                elevation: 1.0,
+                radius: 52.0,
+                text: " Submit",
+                background: Colors.black,
+                onPressed: () {
+                  getterPath.updateData({'designerfeedback': imageEditingController.text.trim()});
+                  showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: Text('Success!'),
+                        content: Text('Feedback to user has been submitted'),
+                      )
+                  );
+                    finPath.updateData({'hasfeedback': FieldValue.arrayUnion([widget.learner])});
+                  },
+              ),
             ),
           ],
         ),
@@ -397,3 +406,4 @@ class _response extends State<responses> {
     );
   }
 }
+

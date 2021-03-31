@@ -1,43 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ModulePage.dart';
 import 'package:flutter_app/Lessons.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_app/classes/firestore_services.dart';
-import 'package:flutter_app/taskCreater.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_app/models/Module.dart';
-import 'package:flutter_app/providers/module_provider.dart';
-import 'package:flutter_app/utils/session.dart';
-import 'package:flutter_app/main.dart';
+import 'package:flutter_app/ModulePage.dart';
 import 'package:flutter_app/Tasks.dart';
-import 'package:flutter_app/screens/LessonPage.dart';
-import 'dart:collection';
-import 'dart:io' as io;
-import 'package:flutter/material.dart';
-import 'package:flutter_app/ModulePage.dart';
-import 'package:flutter_app/Lessons.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_app/classes/firestore_services.dart';
-import 'package:flutter_app/taskCreater.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_app/responses.dart';
-import 'package:flutter_app/models/Module.dart';
-import 'package:flutter_app/providers/module_provider.dart';
-import 'package:flutter_app/utils/session.dart';
-import 'package:flutter_app/main.dart';
-import 'package:flutter_app/Tasks.dart';
-import 'package:flutter_app/screens/LessonPage.dart';
-import 'dart:collection';
-import 'dart:io' as io;
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'dart:js' as js;
+import 'dart:html' as html;
+import 'package:universal_html/html.dart';
+import 'dart:convert';
+import 'package:csv/csv.dart';
 import 'package:path_provider/path_provider.dart';
-
 var infoPath;
 class taskInfo extends StatefulWidget {
   taskInfo({Key key, this.taskName, this.taskType, this.mediaLink}) : super(key: key);
@@ -51,8 +24,47 @@ class taskInfo extends StatefulWidget {
   @override
   _infoState createState() => _infoState();
 }
-
+List<dynamic> row = List<dynamic>();
 class _infoState extends State<taskInfo> {
+
+  void createData() async{
+    List<List<dynamic>> rows = List<List<dynamic>>();
+    String name;
+    String response;
+    String taskID;
+    rows.add(["Name","Answers","Task Type"]);
+    List<dynamic> row = List<dynamic>();
+    firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
+        .collection('Courses').doc(modName)
+        .collection('Modules').doc(lessonName)
+        .collection('Lessons').doc(namePasser)
+        .collection('Tasks').doc(widget.taskName).collection("TaskResponses").snapshots().forEach((element) async{
+
+      name = element.docs[0]["firstname"];
+      response = element.docs[0]["learnerresponses"].toString().replaceAll('[', '').replaceAll(']', '');
+      taskID = element.docs[0]["taskid"];
+      row.add(name);
+      row.add(response);
+      row.add(taskID);
+      print(row);
+      rows.add(row);
+    });
+    //Now lets add 5 data rows
+    String csv = const ListToCsvConverter().convert(rows);//this csv variable holds entire csv data
+    final bytes = utf8.encode(csv);//NOTE THAT HERE WE USED HTML PACKAGE
+    final blob = html.Blob([bytes]);//It will create downloadable object
+    final url = html.Url.createObjectUrlFromBlob(blob);//It will create anchor to download the file
+    final anchor = html.document.createElement('a')  as    html.AnchorElement..href = url..style.display = 'none'         ..download = 'yourcsvname.csv';       //finally add the csv anchor to body
+    html.document.body.children.add(anchor);// Cause download by calling this function
+    anchor.click();
+    html.Url.revokeObjectUrl(url);
+  }
+
+  void generateCSV()
+  {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     var pather = finPath.collection('Tasks').doc(widget.taskName);
@@ -80,12 +92,20 @@ class _infoState extends State<taskInfo> {
               },
             ),
             IconButton(
+              icon: Icon(Icons.file_copy),
+              tooltip: ' Get CSV',
+              onPressed: () async{
+                createData();
+              },
+            ),
+            IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
                 print("Stupid Debug Flag.");
               },
             ),
           ]),
+      //
       backgroundColor: Colors.white,
 
       body: Center(
@@ -125,6 +145,14 @@ class _infoState extends State<taskInfo> {
                                 ),
                             )
                             );}
+                      ),
+                      leading: IconButton(
+                          icon: Icon(Icons.file_copy),
+                          tooltip: 'Generate CSV',
+                          onPressed: () {
+                            setState(() {
+                            });
+                          }
                       ),
                     );
                   }).toList(),

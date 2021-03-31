@@ -5,16 +5,6 @@ import 'package:flutter_app/taskInfo.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/classes/firestore_services.dart';
 import 'package:flutter_app/taskCreater.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_app/models/Module.dart';
-import 'package:flutter_app/providers/module_provider.dart';
-import 'package:flutter_app/utils/session.dart';
-import 'package:flutter_app/main.dart';
-import 'package:flutter_app/Tasks.dart';
-import 'package:flutter_app/screens/LessonPage.dart';
-import 'dart:collection';
-import 'dart:io' as io;
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -44,6 +34,7 @@ class _TasksState extends State<Tasks> {
   Widget build(BuildContext context) {
     var lessonPath = userPath.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.taskName);
     finPath = lessonPath;
+
     namePasser = widget.taskName;
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +83,7 @@ class _TasksState extends State<Tasks> {
                 return new ListView(
                   shrinkWrap: true,
                   children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    counter = snapshot.data.documents.length;
+                    counter = snapshot.data.docs.length;
                     return new ListTile(
                       title: new Text(document.data()['name']),
 

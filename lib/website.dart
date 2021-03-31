@@ -208,11 +208,45 @@ class _ModuleScreenState extends State<ModuleScreen> {
   }
 }
 
-class CreateCourse extends StatelessWidget {
+class CreateCourse extends StatefulWidget {
   List<Widget> course;
   CreateCourse({Key key, @required this.course}) : super(key: key);
+
+  @override
+  _CreateCourseState createState() => _CreateCourseState();
+}
+
+class _CreateCourseState extends State<CreateCourse> {
   TextEditingController nameEditingController = new TextEditingController();
   TextEditingController prefixEditingController = new TextEditingController();
+  DateTime selectedDateOpen = DateTime.now();
+  DateTime selectedDateClose = DateTime.now();
+  bool value = false;
+
+  Future<Null> _selectDateOpen(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDateOpen,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDateOpen)
+      setState(() {
+        selectedDateOpen = picked;
+      });
+  }
+
+  Future<Null> _selectDateClose(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDateClose,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDateClose)
+      setState(() {
+        selectedDateClose = picked;
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -271,17 +305,72 @@ class CreateCourse extends StatelessWidget {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Set Open Date and Close Date: ',
+                  style: TextStyle(fontSize: 17.0),
+                ),
+                SizedBox(width: 10),
+                Checkbox(
+                  value: this.value,
+                  onChanged: (bool value) {
+                    setState(() {
+                      this.value = value;
+                    });
+                    print(value);
+                  },
+                ),
+              ],
+            ),
+            (value)
+            ?Container(
+              child: Column(
+                children: [
+                  Text("Date open: " + "${selectedDateOpen.toLocal()}".split(' ')[0]),
+                  SizedBox(height: 20.0,),
+                  RaisedButton(
+                    onPressed: () => _selectDateOpen(context),
+                    child: Text('Select Open Date'),
+                  ),
+                  SizedBox(height: 50.0,),
+                  Text("Date close: " + "${selectedDateClose.toLocal()}".split(' ')[0]),
+                  SizedBox(height: 20.0,),
+                  RaisedButton(
+                    onPressed: () => _selectDateClose(context),
+                    child: Text('Select Close Date'),
+                  ),
+                ],
+              ),
+            ):Container(),
+
             Container(
               child: Padding(
                 padding: EdgeInsets.all(16),
                 child: RaisedButton(
                     child: Text("Create Course"),
                     onPressed: () {
-                      DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-                      String date = dateFormat.format(DateTime.now());
-                      userPath.collection('Courses').doc(nameEditingController.text.trim()).set(
+                      if (value)
+                      {
+                        userPath.collection('Courses').doc(nameEditingController.text.trim()).set(
+                          {
+                            "dateopen" : selectedDateOpen.toString(),
+                            "dateclose": selectedDateClose.toString(),
+                            "designerid" : firebaseUser.uid,
+                            "isopen" : true,
+                            "learnerids": [],
+                            "id" : nameEditingController.text.trim(),
+                            "name" : nameEditingController.text.trim(),
+                            "prefix" : prefixEditingController.text.trim()
+                          }
+                        );
+                      }
+                      else {
+                        userPath.collection('Courses').doc(nameEditingController.text.trim()).set(
                         {
-                          "dateopen" : date,
+                          "dateopen" : "1999-01-21 15:00:00.000",
+                          "dateclose" : "3021-01-21 15:00:00.000",
                           "designerid" : firebaseUser.uid,
                           "isopen" : true,
                           "learnerids": [],
@@ -289,7 +378,8 @@ class CreateCourse extends StatelessWidget {
                           "name" : nameEditingController.text.trim(),
                           "prefix" : prefixEditingController.text.trim()
                         }
-                      );
+                       );
+                      }
                       Navigator.pop(context, nameEditingController.text);
                     }),
               ),

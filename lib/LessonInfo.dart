@@ -1,42 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ModulePage.dart';
 import 'package:flutter_app/Lessons.dart';
+import 'package:flutter_app/editLesson.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/classes/firestore_services.dart';
-import 'package:flutter_app/taskCreater.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_app/models/Module.dart';
-import 'package:flutter_app/providers/module_provider.dart';
-import 'package:flutter_app/utils/session.dart';
-import 'package:flutter_app/main.dart';
-import 'package:flutter_app/Tasks.dart';
-import 'package:flutter_app/screens/LessonPage.dart';
-import 'dart:collection';
-import 'dart:io' as io;
-import 'package:flutter/material.dart';
-import 'package:flutter_app/ModulePage.dart';
-import 'package:flutter_app/Lessons.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_app/classes/firestore_services.dart';
-import 'package:flutter_app/taskCreater.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_app/responses.dart';
-import 'package:flutter_app/models/Module.dart';
-import 'package:flutter_app/providers/module_provider.dart';
-import 'package:flutter_app/utils/session.dart';
-import 'package:flutter_app/main.dart';
-import 'package:flutter_app/Tasks.dart';
-import 'package:flutter_app/screens/LessonPage.dart';
-import 'dart:collection';
-import 'dart:io' as io;
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
 
 var infoGetter;
 String stuff ;
@@ -58,8 +27,6 @@ class _infoState extends State<LessonInfo> {
 
   Widget build(BuildContext context) {
     infoGetter = userPath.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.lessonName);
-
-
     return Scaffold(
       appBar: AppBar(
           title: Text(
@@ -67,7 +34,22 @@ class _infoState extends State<LessonInfo> {
             style: TextStyle(fontSize: 18),
           ),
           actions: <Widget>[
-
+            IconButton(
+              icon: Icon(Icons.edit_outlined),
+              tooltip: 'Edit Lesson',
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => new editLesson(
+                      lessonName: widget.lessonName,
+                    )));
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                print("Stupid Debug Flag.");
+              },
+            ),
           ]),
       backgroundColor: Colors.white,
       body: Center(
@@ -95,7 +77,7 @@ class _infoState extends State<LessonInfo> {
                 ),
               ),
             ),
-            
+
             Container(
               child: Padding(
                 padding: EdgeInsets.all(16),

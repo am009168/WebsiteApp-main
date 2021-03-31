@@ -47,6 +47,7 @@ dependencies:
   flutter_audio_recorder: ^0.5.2
   path_provider:
   audioplayers: ^0.16.2
+  csv: ^4.1.0
 
 
 dev_dependencies:

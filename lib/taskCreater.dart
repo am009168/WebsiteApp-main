@@ -155,104 +155,6 @@ class _Instruction extends State<Instruction> {
     _controller.addListener(() => _extension = _controller.text);
   }
 
-  Future<String> _openFileImage() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['jpg', 'png'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
-        var holder = ref.child(fileName);
-        if (holder != null)
-        {
-          await ref.putData(uploadfile);
-        }
-        imageUrl = await ref.getDownloadURL();
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
-
-  Future<String> _openFileAudio() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['wav', 'mp3', 'm4a'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        var holder = ref.child(fileName);
-        if (holder != null)
-        {
-          await ref.putData(uploadfile);
-        }
-        audioUrl = await ref.getDownloadURL();
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
-
-  Future<String> _openFileMedia() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['mp4', 'mov', 'avi'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        var holder = ref.child(fileName);
-        if (holder != null)
-        {
-          await ref.putData(uploadfile);
-        }
-        videoUrl = await ref.getDownloadURL();
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
   TextEditingController promptEditingController = new TextEditingController();
   TextEditingController wordEditingController = new TextEditingController();
   TextEditingController imageEditingController = new TextEditingController();
@@ -343,7 +245,7 @@ class _instructionAdderState extends State<instructionAdder> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           imageUrl = await ref.getDownloadURL();
@@ -379,55 +281,17 @@ class _instructionAdderState extends State<instructionAdder> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/media/" + fileName);
         audioRef = ref;
         try {
-          setState(() async{
             audioUrl = await ref.getDownloadURL();
-          });
         }catch(e){
-          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
           await ref.putData(uploadfile);
-          setState(() async{
-            audioUrl = await ref.getDownloadURL();
-          });
+          audioUrl = await ref.getDownloadURL();
         }
         print(audioUrl);
       }catch(e) {
         print("catch");
-        print(e);
-      }
-      return url;
-    }
-  }
-
-  Future<String> _openFileMedia() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['mp4', 'mov', 'avi'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        var holder = ref.child(fileName);
-        if (holder == null)
-        {
-          await ref.putData(uploadfile);
-        }
-        videoUrl = await ref.getDownloadURL();
-        url = await ref.getDownloadURL();
-      }catch(e) {
         print(e);
       }
       return url;
@@ -451,28 +315,6 @@ class _instructionAdderState extends State<instructionAdder> {
               ),
             ),
           ),
-
-          /*Container(
-            padding: EdgeInsets.all(10),
-            child: TextField(
-              controller: mediaEditingController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Media Link',
-              ),
-            ),
-          ),*/
-
-          /*Container(
-            padding: EdgeInsets.all(10),
-            child: TextField(
-              controller: imageEditingController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Image Link (Optional)',
-              ),
-            ),
-          ),*/
 
           Padding(
             padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
@@ -605,7 +447,7 @@ class _multipleChoice extends State<multipleChoice> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           imageUrl = await ref.getDownloadURL();
@@ -641,18 +483,14 @@ class _multipleChoice extends State<multipleChoice> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/media/" + fileName);
         audioRef = ref;
         try {
-          setState(() async{
             audioUrl = await ref.getDownloadURL();
-          });
+
         }catch(e){
-          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
           await ref.putData(uploadfile);
-          setState(() async{
-            audioUrl = await ref.getDownloadURL();
-          });
+          audioUrl = await ref.getDownloadURL();
         }
         print(audioUrl);
       }catch(e) {
@@ -662,40 +500,6 @@ class _multipleChoice extends State<multipleChoice> {
       return url;
     }
   }
-
-  Future<String> _openFileMedia() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['mp4', 'mov', 'avi'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        var holder = ref.child(fileName);
-        if (holder == null)
-        {
-          await ref.putData(uploadfile);
-          print("file not found");
-        }
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -715,17 +519,6 @@ class _multipleChoice extends State<multipleChoice> {
                     ),
                   ),
                 ),
-
-               /* Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: mediaEditingController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Media Link',
-                    ),
-                  ),
-                ),*/
 
                 Padding(
                   padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
@@ -794,17 +587,6 @@ class _multipleChoice extends State<multipleChoice> {
                   ),
                 ),
 
-                /*Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: imageEditingController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Image Link (Optional)',
-                    ),
-                  ),
-                ),*/
-
                 NiceButton(
                   width: 500,
                   elevation: 1.0,
@@ -812,11 +594,10 @@ class _multipleChoice extends State<multipleChoice> {
                   text: " Submit",
                   background: Colors.black,
                   onPressed: () async{
-                    print(audioUrl);
-                    print(imageUrl);
+                    try{
                     pathPasser.updateData(
                         {
-                          "retryflag": "NONE",
+                          "retryflag": "none",
                           "medialink" : await audioRef.getDownloadURL(),
                           "tasktype" : "multiplechoice",
                           "multichoices": [correctEditingController.text.trim(), answer2EditingController.text.trim(),
@@ -831,6 +612,16 @@ class _multipleChoice extends State<multipleChoice> {
                         taskName: namePasser),
                     )
                     );
+                    }
+                    catch(e){
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Wait!'),
+                            content: Text('Please wait while we upload your file(s)'),
+                          )
+                      );
+                    }
                   },
                 ),
               ],
@@ -869,7 +660,7 @@ class _freeTextState extends State<freeText> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           audioUrl = await ref.getDownloadURL();
@@ -905,12 +696,11 @@ class _freeTextState extends State<freeText> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/media/" + fileName);
         audioRef = ref;
         try {
           audioUrl = await ref.getDownloadURL();
         }catch(e){
-          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
           await ref.putData(uploadfile);
 
           print("file not found");
@@ -923,33 +713,6 @@ class _freeTextState extends State<freeText> {
     }
   }
 
-  Future<String> _openFileMedia() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['mp4', 'mov', 'avi'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        await ref.putData(uploadfile);
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
   bool _loadingPath = false;
   TextEditingController promptEditingController = new TextEditingController();
 
@@ -1029,21 +792,32 @@ class _freeTextState extends State<freeText> {
                   radius: 52.0,
                   text: " Submit",
                   background: Colors.black,
-                  onPressed: () async{
-                    pathPasser.updateData(
-                        {
-                          "medialink" : await audioRef.getDownloadURL(),
-                          "tasktype" : "freetext",
-                          "imagelink" : await imageRef.getDownloadURL(),
-                          "prompt" : promptEditingController.text.trim()
+                  onPressed: () async {
+                    try {
+                        pathPasser.updateData({
+                            "medialink": await audioRef.getDownloadURL(),
+                            "tasktype": "freetext",
+                            "imagelink": await imageRef.getDownloadURL(),
+                            "prompt": promptEditingController.text.trim()
                         }
-                    );
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                          taskName: namePasser),
-                    )
-                    );
-                  },
+                      );
+
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                              Tasks(taskName: namePasser),
+                          )
+                        );
+                    }
+                    catch(e){
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Wait!'),
+                            content: Text('Please wait while we upload your file(s)'),
+                          )
+                      );
+                    }
+                  }
                 ),
               ],
             )
@@ -1058,67 +832,12 @@ class videoPerception extends StatefulWidget {
 class _videoPerception extends State<videoPerception> {
   List<Widget> course;
   String dropdownValue = "Free Text";
+  String videoType = "YouTube Link";
+  bool isyoutube = true;
   String imageUrl;
   firebase_storage.Reference videoRef;
   String videoUrl;
-  String audioUrl;
   bool _loadingPath;
-  Future<String> _openFileImage() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['jpg', 'png'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
-        await ref.putData(uploadfile);
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
-
-  Future<String> _openFileAudio() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['wav', 'mp3', 'm4a'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        await ref.putData(uploadfile);
-        imageUrl = await ref.getDownloadURL();
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
 
   Future<String> _openFileMedia() async {
     setState(() => _loadingPath = true);
@@ -1138,29 +857,35 @@ class _videoPerception extends State<videoPerception> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/media/" + fileName);
         videoRef = ref;
         try {
-          audioUrl = await ref.getDownloadURL();
+          videoUrl = await ref.getDownloadURL();
         }catch(e){
-          final newRef = firebase_storage.FirebaseStorage.instance.ref("taskmedia/");
           await ref.putData(uploadfile);
-
           print("file not found");
         }
-        videoUrl = await ref.getDownloadURL();
+        var holder = ref.child(fileName);
+        if (holder == null)
+        {
+          await ref.putData(uploadfile);
+          print("file not found");
+        }
+        url = await ref.getDownloadURL();
       }catch(e) {
         print(e);
       }
       return url;
     }
   }
+
   TextEditingController mediaEditingController = new TextEditingController();
   TextEditingController promptEditingController = new TextEditingController();
   TextEditingController correctEditingController = new TextEditingController();
   TextEditingController answer2EditingController = new TextEditingController();
   TextEditingController answer3EditingController = new TextEditingController();
   TextEditingController answer4EditingController = new TextEditingController();
+
   bool _visible = false;
   void _toggle() {
     if (dropdownValue == "Multiple Choice")
@@ -1175,7 +900,21 @@ class _videoPerception extends State<videoPerception> {
         _visible = false;
       });
     }
+
+    if (videoType == "YouTube Link")
+    {
+      setState(() {
+        isyoutube = true;
+      });
+    }
+
+    else {
+      setState(() {
+        isyoutube = false;
+      });
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1194,8 +933,8 @@ class _videoPerception extends State<videoPerception> {
                     ),
                   ),
                 ),
-
-                Container(
+                (isyoutube)
+                ?Container(
                   padding: EdgeInsets.all(10),
                   child: TextField(
                     controller: mediaEditingController,
@@ -1204,8 +943,42 @@ class _videoPerception extends State<videoPerception> {
                       labelText: 'Youtube Video Link',
                     ),
                   ),
+                ):Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async => videoUrl = await _openFileMedia(),
+                        child: const Text("Open Image Picker"),
+                      ),
+                    ],
+                  ),
                 ),
 
+                DropdownButton<String>(
+                  value: videoType,
+                  icon: Icon(Icons.arrow_downward),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      videoType = newValue;
+                    });
+                    _toggle();
+                  },
+                  items: <String>['YouTube Link', 'Upload Video']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
                 DropdownButton<String>(
                   value: dropdownValue,
                   icon: Icon(Icons.arrow_downward),
@@ -1298,36 +1071,89 @@ class _videoPerception extends State<videoPerception> {
                   radius: 52.0,
                   text: " Submit",
                   background: Colors.black,
-                  onPressed: () {
-                    if(_visible)
-                    {
-                      pathPasser.updateData(
-                          {
+                  onPressed: () async{
+                    try {
+                      if (isyoutube) {
+                        if (_visible) {
+                          pathPasser.updateData(
+                              {
 
-                            "medialink" : mediaEditingController.text.trim(),
-                            "tasktype" : "video",
-                            "multichoices": [correctEditingController.text.trim(), answer2EditingController.text.trim(),
-                              answer3EditingController.text.trim(), answer4EditingController.text.trim()],
-                            "correctchoice": correctEditingController.text.trim(),
-                            "prompt" : promptEditingController.text.trim()
-                          }
+                                "medialink": mediaEditingController.text.trim(),
+                                "tasktype": "video",
+                                "isyoutube": isyoutube,
+                                "multichoices": [
+                                  correctEditingController.text.trim(),
+                                  answer2EditingController.text.trim(),
+                                  answer3EditingController.text.trim(),
+                                  answer4EditingController.text.trim()
+                                ],
+                                "correctchoice": correctEditingController.text
+                                    .trim(),
+                                "prompt": promptEditingController.text.trim()
+                              }
+                          );
+                        }
+
+                        else {
+                          pathPasser.updateData(
+                              {
+                                "isyoutube": isyoutube,
+                                "medialink": mediaEditingController.text.trim(),
+                                "tasktype": "video",
+                                "prompt": promptEditingController.text.trim()
+                              }
+                          );
+                        }
+                      }
+
+                      else {
+                        if (_visible) {
+                          pathPasser.updateData(
+                              {
+
+                                "medialink": await videoRef.getDownloadURL(),
+                                "tasktype": "video",
+                                "isyoutube": isyoutube,
+                                "multichoices": [
+                                  correctEditingController.text.trim(),
+                                  answer2EditingController.text.trim(),
+                                  answer3EditingController.text.trim(),
+                                  answer4EditingController.text.trim()
+                                ],
+                                "correctchoice": correctEditingController.text
+                                    .trim(),
+                                "prompt": promptEditingController.text.trim()
+                              }
+                          );
+                        }
+
+                        else {
+                          pathPasser.updateData(
+                              {
+                                "isyoutube": isyoutube,
+                                "medialink": await videoRef.getDownloadURL(),
+                                "tasktype": "video",
+                                "prompt": promptEditingController.text.trim()
+                              }
+                          );
+                        }
+                      }
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            Tasks(
+                                taskName: namePasser),
+                      )
                       );
                     }
-
-                    else {
-                      pathPasser.updateData(
-                          {
-                            "medialink" : mediaEditingController.text.trim(),
-                            "tasktype" : "video",
-                            "prompt" : promptEditingController.text.trim()
-                          }
+                    catch(e){
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Wait!'),
+                            content: Text('Please wait while we upload your file(s)'),
+                          )
                       );
                     }
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                          taskName: namePasser),
-                    )
-                    );
                   },
                 ),
               ],
@@ -1366,7 +1192,7 @@ class _constrainedProdState extends State<constrainedProd> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           audioUrl = await ref.getDownloadURL();
@@ -1377,63 +1203,6 @@ class _constrainedProdState extends State<constrainedProd> {
           print("file not found");
         }
         imageUrl = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
-
-  Future<String> _openFileAudio() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['wav', 'mp3', 'm4a'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        await ref.putData(uploadfile);
-        imageUrl = await ref.getDownloadURL();
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
-
-  Future<String> _openFileMedia() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['mp4', 'mov', 'avi'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        await ref.putData(uploadfile);
-        url = await ref.getDownloadURL();
       }catch(e) {
         print(e);
       }
@@ -1506,19 +1275,33 @@ class _constrainedProdState extends State<constrainedProd> {
                   text: " Submit",
                   background: Colors.black,
                   onPressed: () async{
-                    pathPasser.updateData(
-                        {
-                          "tasktype" : "constproduction",
-                          "correctchoice" : correctEditingController.text.trim(),
-                          "imagelink" : await imageRef.getDownloadURL(),
-                          "prompt" : promptEditingController.text.trim()
-                        }
-                    );
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                          taskName: namePasser),
-                    )
-                    );
+                    try {
+                      pathPasser.updateData(
+                          {
+                            "tasktype": "constproduction",
+                            "correctchoice": correctEditingController.text
+                                .trim(),
+                            "imagelink": await imageRef.getDownloadURL(),
+                            "prompt": promptEditingController.text.trim()
+                          }
+                      );
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            Tasks(
+                                taskName: namePasser),
+                      )
+                      );
+                    }
+
+                    catch(e){
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Wait!'),
+                            content: Text('Please wait while we upload your file(s)'),
+                          )
+                      );
+                    }
                   },
                 ),
               ],
@@ -1557,7 +1340,7 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskimages/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           audioUrl = await ref.getDownloadURL();
@@ -1575,62 +1358,6 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
     }
   }
 
-  Future<String> _openFileAudio() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['wav', 'mp3', 'm4a'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        await ref.putData(uploadfile);
-        imageUrl = await ref.getDownloadURL();
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
-
-  Future<String> _openFileMedia() async {
-    setState(() => _loadingPath = true);
-    FilePickerResult result;
-    var url;
-    try{
-      result = await FilePicker.platform.pickFiles(type: FileType.custom,
-        allowedExtensions: ['mp4', 'mov', 'avi'],
-      );
-    } catch(e)
-    { print(e);
-    }
-    if(result != null) {
-      try{
-        print(result.files.single.name);
-        print(result.files.single.size);
-        print(result.files.single.extension);
-        Uint8List uploadfile = result.files.single.bytes;
-        String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("taskmedia/" + fileName);
-        await ref.putData(uploadfile);
-        url = await ref.getDownloadURL();
-      }catch(e) {
-        print(e);
-      }
-      return url;
-    }
-  }
   TextEditingController promptEditingController = new TextEditingController();
 
   TextEditingController imageEditingController = new TextEditingController();
@@ -1674,18 +1401,31 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
                   text: " Submit",
                   background: Colors.black,
                   onPressed: () async{
-                    pathPasser.updateData(
-                        {
-                          "tasktype" : "unconstproduction",
-                          "imagelink" : await imageRef.getDownloadURL(),
-                          "prompt" : promptEditingController.text.trim()
-                        }
-                    );
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Tasks(
-                          taskName: namePasser),
-                    )
-                    );
+                    try {
+                      pathPasser.updateData(
+                          {
+                            "tasktype": "unconstproduction",
+                            "imagelink": await imageRef.getDownloadURL(),
+                            "prompt": promptEditingController.text.trim()
+                          }
+                      );
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            Tasks(
+                                taskName: namePasser),
+                      )
+                      );
+                    }
+
+                    catch(e){
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Wait!'),
+                            content: Text('Please wait while we upload your file(s)'),
+                          )
+                      );
+                    }
                   },
                 ),
               ],
@@ -1693,5 +1433,4 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
         ));
   }
 }
-
 
