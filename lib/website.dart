@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/courseInfo.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter_app/authentication.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -62,79 +63,142 @@ class _FirstScreenState extends State<FirstScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Courses'), actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.refresh),
-          tooltip: 'refresh courses',
-          onPressed: () {
-            setState(() {}) ;
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.add),
-          tooltip: 'add course',
-          onPressed: () {
-            _navigateToCreatCourse(context);
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            print("Stupid Debug Flag.");
-          },
-        ),
-      ]),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-              stream: coursePath.snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
-                }
-
-                return new ListView(
-                  shrinkWrap: true,
-                  children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    return new ListTile(
-                      title: new Text(document.data()['name']),
-                      subtitle: new Text(document.data()['prefix']),
-                      leading:  IconButton(
-                          icon: Icon(Icons.info),
-                          tooltip: 'Get Lesson Information',
-                          onPressed: () {
-                            setState(() {
-                            });
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => courseInfo(
-                                courseName: document.data()["name"],),
-                            )
-                            );}
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.arrow_right),
-                        tooltip: 'Get Course Information',
-                        onPressed: () {
-                          setState(() {
-                          });
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ModulePage(
-                              courseName: document.data()["name"],
-                              courseID: document.data()['id'],),
-                          )
-                          );},
-                      ),
-                    );
-                  }).toList(),
-                );
-              },
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        title:Container(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Smart-Talk Course Page'),
+                InkWell(
+                  onTap: () {
+                    _navigateToCreatCourse(context);
+                  },
+                  child: Text(
+                    'Add Course',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 100),
+          ),
+        ),
+      ),
+      body: Center(
+        child: Stack(
+          children: [
+            Container( // image below the top bar
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.45,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  'assets/bg.jpg',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Positioned(
+              left:MediaQuery.of(context).size.width * 0.43,
+              top: MediaQuery.of(context).size.height * 0.42,
+              child: Card(
+                elevation: 8.0,
+                margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                    margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                    child: Text('Welcome!',style: TextStyle(fontSize:50 ),)),
+              ),
+            ),
+            Center(
+              child: Column(
+                children: [
+                  SizedBox(height: 50,),
+                  Image(image: AssetImage('assets/banner.png'),height:500 ,width: 750,),
+                  SizedBox(height: 175,),
+                  Text("Current Course List ",style: TextStyle(fontSize:25 )),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 2)
+                    ),
+                    margin: const EdgeInsets.all(10.0),
+                    width: 1500.0,
+                    height: 500.0,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          StreamBuilder<QuerySnapshot>(
+                            stream: coursePath.snapshots(),
+                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Something went wrong');
+                              }
+
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Text("Loading");
+                              }
+                              return new ListView(
+                                shrinkWrap: true,
+                                children: snapshot.data.documents.map((DocumentSnapshot document) {
+                                  return Card(
+                                    elevation: 8.0,
+                                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                                      child: new ListTile(
+                                        title: new Text(document.data()['name'], style: TextStyle(color: Colors.white),),
+                                        subtitle: Row(
+                                          children: [
+                                            Icon(Icons.linear_scale, color: Colors.white),
+                                            Text('  '),
+                                            new Text(document.data()['prefix'], style: TextStyle(color: Colors.white)),
+                                          ],
+                                        ),
+                                        leading:  Container(
+                                          decoration: new BoxDecoration(
+                                              border: new Border(
+                                                  right: new BorderSide(width: 1.0, color: Colors.white24))),
+                                          child: IconButton(
+                                              icon: Icon(Icons.info, color: Colors.white,),
+                                              tooltip: 'Get Lesson Information',
+                                              onPressed: () {
+                                                setState(() {
+                                                });
+                                                Navigator.of(context).push(MaterialPageRoute(
+                                                  builder: (context) => courseInfo(
+                                                    courseName: document.data()["name"],),
+                                                )
+                                                );}
+                                          ),
+                                        ),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.arrow_right, color: Colors.white,),
+                                          tooltip: 'Get Course Information',
+                                          onPressed: () {
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (context) => ModulePage(
+                                                courseName: document.data()["name"],
+                                                courseID: document.data()['id'],),
+                                            )
+                                            );},
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          ),
+                          SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -31,86 +31,140 @@ class _LessonsState extends State<Lessons> {
     path = modulePath;
     lessonName = widget.LessonName;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-          title: Text(
-            widget.LessonName + " Lessons",
-            style: TextStyle(fontSize: 18),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        title:Container(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Smart-Talk Course Page'),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => new CreateLesson()));
+                  },
+                  child: Text(
+                    'Add Course',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.refresh),
-              tooltip: 'refresh courses',
-              onPressed: () {
-                setState(() {}) ;
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.add),
-              tooltip: 'add course',
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => new CreateLesson()));
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                print("Stupid Debug Flag.");
-              },
-            ),
-          ]),
-      backgroundColor: Colors.white,
-
+        ),
+      ),
       body: Center(
-        child: Column(
-          children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-              stream: modulePath.collection('Lessons').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
-                }
-
-                return new ListView(
-                  shrinkWrap: true,
-                  children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    return new ListTile(
-                      title: new Text(document.data()['name']),
-                      leading:  IconButton(
-                          icon: Icon(Icons.info),
-                          tooltip: 'Get Lesson Information',
-                          onPressed: () {
-                            setState(() {
-                            });
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => LessonInfo(
-                                lessonName: document.data()["name"],),
-                            )
-                            );}
+        child: SingleChildScrollView(
+          child: Stack(
+            children: <Widget>[
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bg.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.43,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text('Your Lessons',style: TextStyle(fontSize:50 ),)),
+                ),
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 50,),
+                    Image(image: AssetImage('assets/banner.png'),height:500 ,width: 750,),
+                    SizedBox(height: 175,),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 2)
                       ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.arrow_right),
-                        tooltip: 'Get Lesson Information',
-                        onPressed: () {
-                          setState(() {
-                          });
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Tasks(
-                              taskName: document.data()["name"],),
-                          )
-                          );}
+                      margin: const EdgeInsets.all(10.0),
+                      width: 1500.0,
+                      height: 500.0,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            StreamBuilder<QuerySnapshot>(
+                              stream: modulePath.collection('Lessons').snapshots(),
+                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Something went wrong');
+                                }
+
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Text("Loading");
+                                }
+
+                                return new ListView(
+                                  shrinkWrap: true,
+                                  children: snapshot.data.documents.map((DocumentSnapshot document) {
+                                    return Card(
+                                      elevation: 8.0,
+                                      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                                        child: new ListTile(
+                                          title: new Text(document.data()['name'], style: TextStyle(color: Colors.white),),
+                                          leading:  Container(
+                                            decoration: new BoxDecoration(
+                                                border: new Border(
+                                                    right: new BorderSide(width: 1.0, color: Colors.white24))),
+                                            child: IconButton(
+                                                icon: Icon(Icons.info, color: Colors.white,),
+                                                tooltip: 'Get Lesson Information',
+                                                onPressed: () {
+                                                  setState(() {
+                                                  });
+                                                  Navigator.of(context).push(MaterialPageRoute(
+                                                    builder: (context) => LessonInfo(
+                                                      lessonName: document.data()["name"],),
+                                                  )
+                                                  );}
+                                            ),
+                                          ),
+                                          trailing: IconButton(
+                                            icon: Icon(Icons.arrow_right),
+                                            tooltip: 'Get Lesson Information',
+                                            onPressed: () {
+                                              setState(() {
+                                              });
+                                              Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (context) => Tasks(
+                                                  taskName: document.data()["name"],),
+                                              )
+                                              );}
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
-            SizedBox(height: 100),
-          ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 100),
+            ],
+          ),
         ),
       ),
     );

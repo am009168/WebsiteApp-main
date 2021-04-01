@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  rive:
+  flare_flutter:
   universal_html: ^1.2.4
   firebase_core: "^0.5.2"
   firebase_auth: "^0.18.3"

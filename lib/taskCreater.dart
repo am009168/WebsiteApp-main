@@ -162,7 +162,7 @@ class _Instruction extends State<Instruction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Instruction Task')),
+        appBar: AppBar(title: Text('Instruction Task'),),
         body: ListView(
           children: <Widget>[
             Text("Enter Course Information below",style: TextStyle(fontSize: 20),),

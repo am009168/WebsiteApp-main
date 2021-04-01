@@ -40,72 +40,121 @@ class _ModulePageState extends State<ModulePage> {
     modName = widget.courseName;
     path = coursePath;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(
-          widget.courseName + " Modules",
-          style: TextStyle(fontSize: 18),
+        backgroundColor: Colors.purpleAccent,
+        elevation: 0.0,
+        title:Container(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Smart-Talk Course Page'),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => new CreateModule()));
+                  },
+                  child: Text(
+                    'Add Course',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.refresh),
-              tooltip: 'refresh courses',
-              onPressed: () {
-                setState(() {}) ;
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.add),
-              tooltip: 'add course',
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => new CreateModule()));
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                print("Stupid Debug Flag.");
-              },
-            ),
-          ]),
-        backgroundColor: Colors.white,
-
+      ),
       body: Center(
-        child: Column(
-          children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-              stream: coursePath.collection('Modules').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
-                }
-
-                return new ListView(
-                  shrinkWrap: true,
-                  children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    return new ListTile(
-                      title: new Text(document.data()['name']),
-                      trailing: IconButton(
-                        icon: Icon(Icons.info),
-                        tooltip: 'Get Course Information',
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Lessons(
-                              LessonName: document.data()["name"],),
-                          )
-                          );}
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bg.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.43,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text('Your Modules',style: TextStyle(fontSize:50 ),)),
+                ),
+              ),
+              Center(
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 50,),
+                    Image(image: AssetImage('assets/banner.png'),height:500 ,width: 750,),
+                    SizedBox(height: 175,),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 2)
                       ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
-            SizedBox(height: 100),
-          ],
+                      margin: const EdgeInsets.all(10.0),
+                      width: 1500.0,
+                      height: 500.0,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            StreamBuilder<QuerySnapshot>(
+                              stream: coursePath.collection('Modules').snapshots(),
+                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Something went wrong');
+                                }
+
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Text("Loading");
+                                }
+
+                                return new ListView(
+                                  shrinkWrap: true,
+                                  children: snapshot.data.documents.map((DocumentSnapshot document) {
+                                    return Card(
+                                      elevation: 8.0,
+                                      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                                        child: new ListTile(
+                                          title: new Text(document.data()['name'], style: TextStyle(color: Colors.white),),
+                                          trailing: IconButton(
+                                            icon: Icon(Icons.info),
+                                            tooltip: 'Get Course Information',
+                                            onPressed: () {
+                                              Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (context) => Lessons(
+                                                  LessonName: document.data()["name"],),
+                                              )
+                                              );}
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -157,116 +206,118 @@ class _CreateModuleState extends State<CreateModule> {
     return Scaffold(
         appBar: AppBar(title: Text('Create Module')),
         body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              verticalDirection: VerticalDirection.down,
-              children: <Widget>[
-                Column(
-                  children: [
-                    Container(
-                      child: TextField(
-                        keyboardType: TextInputType.text,
-                        maxLines: 1,
-                        autofocus: false,
-                        cursorColor: Colors.blue,
-                        maxLengthEnforced: true,
-                        controller: nameEditingController,
-                        decoration: InputDecoration(
-                          labelText: "Module Name",
-                          prefixIcon: Icon(Icons.edit),
-                          //Unfocus Text is grey
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          //Focued Text is blue
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                verticalDirection: VerticalDirection.down,
+                children: <Widget>[
+                  Column(
+                    children: [
+                      Container(
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          maxLines: 1,
+                          autofocus: false,
+                          cursorColor: Colors.blue,
+                          maxLengthEnforced: true,
+                          controller: nameEditingController,
+                          decoration: InputDecoration(
+                            labelText: "Module Name",
+                            prefixIcon: Icon(Icons.edit),
+                            //Unfocus Text is grey
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            //Focued Text is blue
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Set Open Date and Close Date: ',
-                      style: TextStyle(fontSize: 17.0),
-                    ),
-                    SizedBox(width: 10),
-                    Checkbox(
-                      value: this.value,
-                      onChanged: (bool value) {
-                        setState(() {
-                          this.value = value;
-                        });
-                        print(value);
-                      },
-                    ),
-                  ],
-                ),
-                (value)
-                    ?Container(
-                  child: Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Date open: " + "${selectedDateOpen.toLocal()}".split(' ')[0]),
-                      SizedBox(height: 20.0,),
-                      RaisedButton(
-                        onPressed: () => _selectDateOpen(context),
-                        child: Text('Select Open Date'),
+                      Text(
+                        'Set Open Date and Close Date: ',
+                        style: TextStyle(fontSize: 17.0),
                       ),
-                      SizedBox(height: 50.0,),
-                      Text("Date close: " + "${selectedDateClose.toLocal()}".split(' ')[0]),
-                      SizedBox(height: 20.0,),
-                      RaisedButton(
-                        onPressed: () => _selectDateClose(context),
-                        child: Text('Select Close Date'),
+                      SizedBox(width: 10),
+                      Checkbox(
+                        value: this.value,
+                        onChanged: (bool value) {
+                          setState(() {
+                            this.value = value;
+                          });
+                          print(value);
+                        },
                       ),
                     ],
                   ),
-                ):Container(),
+                  (value)
+                      ?Container(
+                    child: Column(
+                      children: [
+                        Text("Date open: " + "${selectedDateOpen.toLocal()}".split(' ')[0]),
+                        SizedBox(height: 20.0,),
+                        RaisedButton(
+                          onPressed: () => _selectDateOpen(context),
+                          child: Text('Select Open Date'),
+                        ),
+                        SizedBox(height: 50.0,),
+                        Text("Date close: " + "${selectedDateClose.toLocal()}".split(' ')[0]),
+                        SizedBox(height: 20.0,),
+                        RaisedButton(
+                          onPressed: () => _selectDateClose(context),
+                          child: Text('Select Close Date'),
+                        ),
+                      ],
+                    ),
+                  ):Container(),
 
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: RaisedButton(
-                        child: Text("Create Module"),
-                        onPressed: () {
-                          DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-                          String date = dateFormat.format(DateTime.now());
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: RaisedButton(
+                          child: Text("Create Module"),
+                          onPressed: () {
+                            DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+                            String date = dateFormat.format(DateTime.now());
 
-                          if (value) {
-                            path.collection('Modules').doc(nameEditingController.text.trim()).set(
-                                {
-                                  "dateopen": selectedDateOpen.toString(),
-                                  "dateclose": selectedDateClose.toString(),
-                                  "designerid": firebaseUser.uid,
-                                  "isopen": true,
-                                  "id": nameEditingController.text.trim(),
-                                  "name": nameEditingController.text.trim(),
-                                }
-                            );
-                          }
-                          else{
-                            path.collection('Modules').doc(nameEditingController.text.trim()).set(
-                                {
-                                  "dateopen" : "1999-01-21 15:00:00.000",
-                                  "dateclose" : "3021-01-21 15:00:00.000",
-                                  "designerid": firebaseUser.uid,
-                                  "isopen": true,
-                                  "id": nameEditingController.text.trim(),
-                                  "name": nameEditingController.text.trim(),
-                                }
-                            );
-                          }
+                            if (value) {
+                              path.collection('Modules').doc(nameEditingController.text.trim()).set(
+                                  {
+                                    "dateopen": selectedDateOpen.toString(),
+                                    "dateclose": selectedDateClose.toString(),
+                                    "designerid": firebaseUser.uid,
+                                    "isopen": true,
+                                    "id": nameEditingController.text.trim(),
+                                    "name": nameEditingController.text.trim(),
+                                  }
+                              );
+                            }
+                            else{
+                              path.collection('Modules').doc(nameEditingController.text.trim()).set(
+                                  {
+                                    "dateopen" : "1999-01-21 15:00:00.000",
+                                    "dateclose" : "3021-01-21 15:00:00.000",
+                                    "designerid": firebaseUser.uid,
+                                    "isopen": true,
+                                    "id": nameEditingController.text.trim(),
+                                    "name": nameEditingController.text.trim(),
+                                  }
+                              );
+                            }
 
-                          Navigator.pop(context, nameEditingController.text);
-                        }),
+                            Navigator.pop(context, nameEditingController.text);
+                          }),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )));
   }
 }
