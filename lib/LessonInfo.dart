@@ -36,96 +36,146 @@ class _infoState extends State<LessonInfo> {
   Widget build(BuildContext context) {
     infoGetter = userPath.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.lessonName);
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-          title: Text(
-            widget.lessonName + " Lesson",
-            style: TextStyle(fontSize: 18),
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.delete),
-              tooltip: 'Delete Task',
-              onPressed: () {
-                delete();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => Lessons(
-                      LessonName: lessonName),
-                )
-                );
-              },
-            ),
-
-            IconButton(
-              icon: Icon(Icons.edit_outlined),
-              tooltip: 'Edit Lesson',
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => new editLesson(
-                      lessonName: widget.lessonName,
-                    )));
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                print("Stupid Debug Flag.");
-              },
-            ),
-          ]),
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Text("Add new user to Lesson "),
-            Container(
-              child: TextField(
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-                autofocus: false,
-                cursorColor: Colors.blue,
-                controller: nameEditingController,
-                decoration: InputDecoration(
-                  labelText: "User Email",
-                  prefixIcon: Icon(Icons.account_circle_sharp),
-                  //Unfocus Text is grey
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        title:Container(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Smart-Talk Course Page'),
+                InkWell(
+                  onTap: () {
+                    delete();
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Lessons(
+                          LessonName: lessonName),
+                    )
+                    );
+                  },
+                  child: Text(
+                    'Delete Task',
+                    style: TextStyle(color: Colors.white),
                   ),
-                  //Focued Text is blue
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => new editLesson(
+                          lessonName: widget.lessonName,
+                        )));
+                  },
+                  child: Text(
+                    'Edit Lesson',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bg.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-            ),
-
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: RaisedButton(
-                    child: Text("Add User"),
-                    onPressed: () async{
-                      stuff= await getIdByEmail(nameEditingController.text.trim());
-
-                      if (getIdByEmail(nameEditingController.text.trim()) != null) {
-                        infoGetter.updateData(
-                            {'learnerids': FieldValue.arrayUnion([stuff])});
-                      }
-                      else {
-                        showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: Text('User Not Found'),
-                              content: Text('Please enter a new email'),
-                            )
-                        );
-                        }
-                      Navigator.pop(context, nameEditingController.text);
-                    }),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.37,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text("Lesson Info",style: TextStyle(fontSize:50 ),)),
+                ),
               ),
-            ),
-            SizedBox(height: 100),
-          ],
+              Center(
+                child: Column(
+                  children: [
+                    Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                    SizedBox(height: 175,),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 2)
+                      ),
+                      margin: const EdgeInsets.all(10.0),
+                      width: 1500.0,
+                      height: 500.0,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            Text("Add new user to Lesson "),
+                            Container(
+                              child: TextField(
+                                keyboardType: TextInputType.text,
+                                maxLines: 1,
+                                autofocus: false,
+                                cursorColor: Colors.blue,
+                                controller: nameEditingController,
+                                decoration: InputDecoration(
+                                  labelText: "User Email",
+                                  prefixIcon: Icon(Icons.account_circle_sharp),
+                                  //Unfocus Text is grey
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  //Focued Text is blue
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.blue),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Container(
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: RaisedButton(
+                                    child: Text("Add User"),
+                                    onPressed: () async{
+                                      stuff= await getIdByEmail(nameEditingController.text.trim());
+
+                                      if (getIdByEmail(nameEditingController.text.trim()) != null) {
+                                        infoGetter.updateData(
+                                            {'learnerids': FieldValue.arrayUnion([stuff])});
+                                      }
+                                      else {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) => AlertDialog(
+                                              title: Text('User Not Found'),
+                                              content: Text('Please enter a new email'),
+                                            )
+                                        );
+                                        }
+                                      Navigator.pop(context, nameEditingController.text);
+                                    }),
+                              ),
+                            ),
+                            SizedBox(height: 100),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -37,77 +37,122 @@ class _TasksState extends State<Tasks> {
 
     namePasser = widget.taskName;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-          title: Text(
-            widget.taskName + " Tasks",
-            style: TextStyle(fontSize: 18),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        title:Container(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Smart-Talk Task Page'),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => new CreateTask()));
+                  },
+                  child: Text(
+                    'Create Task',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+
+              ],
+            ),
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.refresh),
-              tooltip: 'refresh courses',
-              onPressed: () {
-                setState(() {}) ;
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.add),
-              tooltip: 'add course',
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => new CreateTask()));
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                print("Stupid Debug Flag.");
-              },
-            ),
-          ]),
-      backgroundColor: Colors.white,
-
+        ),
+      ),
       body: Center(
-        child: Column(
-          children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-              stream: lessonPath.collection('Tasks').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
-                }
-                return new ListView(
-                  shrinkWrap: true,
-                  children: snapshot.data.documents.map((DocumentSnapshot document) {
-                    counter = snapshot.data.docs.length;
-                    return new ListTile(
-                      title: new Text(document.data()['name']),
-
-                      trailing: IconButton(
-                        icon: Icon(Icons.info),
-                        tooltip: 'Task Page',
-                          onPressed: () {
-                            setState(() {
-                            });
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => taskInfo(
-                                taskName: document.data()["name"],
-                                taskType: document.data()['tasktype'],
-                                mediaLink:document.data()["medialink"] ,),
-                            )
-                            );}
+        child: SingleChildScrollView(
+          child: Stack(
+            children: <Widget>[
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bgM.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.37,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text('Your Tasks',style: TextStyle(fontSize:50 ),)),
+                ),
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 50,),
+                    Image(image: AssetImage('assets/bulb.png'),height:350 ,width: 750,),
+                    SizedBox(height: 175,),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 2)
                       ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
-            SizedBox(height: 100),
-          ],
+                      margin: const EdgeInsets.all(10.0),
+                      width: 1500.0,
+                      height: 500.0,
+                      child: SingleChildScrollView(
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: lessonPath.collection('Tasks').snapshots(),
+                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Something went wrong');
+                            }
+
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Text("Loading");
+                            }
+                            return new ListView(
+                              shrinkWrap: true,
+                              children: snapshot.data.documents.map((DocumentSnapshot document) {
+                                counter = snapshot.data.docs.length;
+                                return Card(
+                                  elevation: 8.0,
+                                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: new ListTile(
+                                      title: new Text(document.data()['name'], style: TextStyle(color: Colors.white),),
+                                      trailing: IconButton(
+                                        icon: Icon(Icons.info, color: Colors.white,),
+                                        tooltip: 'Task Page',
+                                          onPressed: () {
+                                            setState(() {
+                                            });
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (context) => taskInfo(
+                                                taskName: document.data()["name"],
+                                                taskType: document.data()['tasktype'],
+                                                mediaLink:document.data()["medialink"] ,),
+                                            )
+                                            );}
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 100),
+            ],
+          ),
         ),
       ),
     );
@@ -120,63 +165,117 @@ class CreateTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Create Task')),
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          title:Container(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Create Task Page'),
+                ],
+              ),
+            ),
+          ),
+        ),
         body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              verticalDirection: VerticalDirection.down,
-              children: <Widget>[
-                Column(
-                  children: [
-                    Container(
-                      child: TextField(
-                        keyboardType: TextInputType.text,
-                        maxLines: 1,
-                        autofocus: false,
-                        cursorColor: Colors.blue,
-                        maxLengthEnforced: true,
-                        controller: nameEditingController,
-                        decoration: InputDecoration(
-                          labelText: "Task Name",
-                          prefixIcon: Icon(Icons.folder),
-                          //Unfocus Text is grey
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          //Focued Text is blue
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue),
-                          ),
-                        ),
-                      ),
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                Container( // image below the top bar
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.45,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.asset(
+                      'assets/bgM.jpg',
+                      fit: BoxFit.cover,
                     ),
-                  ],
-                ),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: RaisedButton(
-                        child: Text("Create Task"),
-                        onPressed: () {
-                          DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-                          String date = dateFormat.format(DateTime.now());
-                          finPath.collection('Tasks').doc(nameEditingController.text.trim()).set(
-                              {
-                                'orderid' : counter,
-                                "dateopen" : date,
-                                "designerid" : firebaseUser.uid,
-                                "isopen" : true,
-                                "id": nameEditingController.text.trim(),
-                                "name" : nameEditingController.text.trim(),
-                              }
-                          );
-                          pathPasser = finPath.collection('Tasks').doc(nameEditingController.text.trim());
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => new taskCreater()));
-                        }),
                   ),
                 ),
+                Positioned(
+                  left:MediaQuery.of(context).size.width * 0.35,
+                  top: MediaQuery.of(context).size.height * 0.42,
+                  child: Card(
+                    elevation: 8.0,
+                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                    child: Container(
+                        margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                        child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
+                  ),
+                ),
+                Center(
+                    child: Column(
+                      children: <Widget>[
+                        Image(image: AssetImage('assets/bulb.png'),height:350 ,width: 750,),
+                        SizedBox(height: 175,),
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white, width: 2)
+                          ),
+                          margin: const EdgeInsets.all(10.0),
+                          width: 1500.0,
+                          height: 500.0,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: TextField(
+                                    keyboardType: TextInputType.text,
+                                    maxLines: 1,
+                                    autofocus: false,
+                                    cursorColor: Colors.blue,
+                                    maxLengthEnforced: true,
+                                    controller: nameEditingController,
+                                    decoration: InputDecoration(
+                                      labelText: "Task Name",
+                                      prefixIcon: Icon(Icons.folder),
+                                      //Unfocus Text is grey
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.grey),
+                                      ),
+                                      //Focued Text is blue
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: RaisedButton(
+                                        child: Text("Create Task"),
+                                        onPressed: () {
+                                          DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+                                          String date = dateFormat.format(DateTime.now());
+                                          finPath.collection('Tasks').doc(nameEditingController.text.trim()).set(
+                                              {
+                                                'orderid' : counter,
+                                                "dateopen" : date,
+                                                "designerid" : firebaseUser.uid,
+                                                "isopen" : true,
+                                                "id": nameEditingController.text.trim(),
+                                                "name" : nameEditingController.text.trim(),
+                                              }
+                                          );
+                                          pathPasser = finPath.collection('Tasks').doc(nameEditingController.text.trim());
+                                          Navigator.push(context,
+                                              MaterialPageRoute(builder: (context) => new taskCreater()));
+                                        }),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
               ],
-            )));
+            ),
+          ),
+        ));
   }
 }
