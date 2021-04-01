@@ -13,12 +13,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 var path;
 String lessonName;
 var bigLesson;
-
 class Lessons extends StatefulWidget {
-  Lessons({Key key, this.LessonID, this.LessonName}) : super(key: key);
+  Lessons({Key key, this.LessonName}) : super(key: key);
   // always marked "final".
   final String LessonName;
-  final String LessonID ;
 
   //final String courseId;
 

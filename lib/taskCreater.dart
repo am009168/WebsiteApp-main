@@ -213,6 +213,7 @@ class _instructionAdderState extends State<instructionAdder> {
   String videoUrl;
   String audioUrl;
   bool _loadingPath = false;
+  bool value = false;
 
   TextEditingController wordEditingController = new TextEditingController();
 
@@ -316,17 +317,7 @@ class _instructionAdderState extends State<instructionAdder> {
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-            child: Column(
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () async => await _openFileImage(),
-                  child: const Text("Open Image Picker"),
-                ),
-              ],
-            ),
-          ),
+          
 
           Padding(
             padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
@@ -339,6 +330,38 @@ class _instructionAdderState extends State<instructionAdder> {
               ],
             ),
           ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Include uploaded image: ',
+                style: TextStyle(fontSize: 17.0),
+              ),
+              SizedBox(width: 10),
+              Checkbox(
+                value: this.value,
+                onChanged: (bool value) {
+                  setState(() {
+                    this.value = value;
+                  });
+                  print(value);
+                },
+              ),
+            ],
+          ),
+          (value)
+              ?Padding(
+            padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+            child: Column(
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () async => imageUrl = await _openFileImage(),
+                  child: const Text("Open Image Picker"),
+                ),
+              ],
+            ),
+          ):Container(),
 
           Row(
             children: [
@@ -377,7 +400,13 @@ class _instructionAdderState extends State<instructionAdder> {
                 text: "Add More",
                 background: Colors.black,
                 onPressed: () async{
-                  imageArr.add(await imageRef.getDownloadURL());
+                  if(value)
+                  {
+                    imageArr.add(await imageRef.getDownloadURL());
+                  }
+                  else
+                    imageArr.add("NONE");
+                  
                   audioArr.add(await audioRef.getDownloadURL());
                   print(imageArr);
                   pathPasser.updateData({'instructionwords': FieldValue.arrayUnion([wordEditingController.text.trim()])});
@@ -411,6 +440,7 @@ class _multipleChoice extends State<multipleChoice> {
   String imageUrl;
   String mediaUrl;
   String audioUrl ;
+  String retryFlag = "NONE";
   String _fileName;
   firebase_storage.Reference imageRef, audioRef;
   List<PlatformFile> _paths;
@@ -421,6 +451,7 @@ class _multipleChoice extends State<multipleChoice> {
   FileType _pickingType = FileType.any;
   TextEditingController _controller = TextEditingController();
   bool canContinue;
+  bool value = false;
 
   @override
   void initState() {
@@ -525,24 +556,44 @@ class _multipleChoice extends State<multipleChoice> {
                   child: Column(
                     children: <Widget>[
                       ElevatedButton(
-                        onPressed: () async => imageUrl = await _openFileImage(),
-                        child: const Text("Open Image Picker"),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                  child: Column(
-                    children: <Widget>[
-                      ElevatedButton(
                         onPressed: () async => audioUrl = await _openFileAudio(),
                         child: const Text("Open Audio Picker"),
                       ),
                     ],
                   ),
                 ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Include uploaded image: ',
+                      style: TextStyle(fontSize: 17.0),
+                    ),
+                    SizedBox(width: 10),
+                    Checkbox(
+                      value: this.value,
+                      onChanged: (bool value) {
+                        setState(() {
+                          this.value = value;
+                        });
+                        print(value);
+                      },
+                    ),
+                  ],
+                ),
+                (value)
+                ?Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async => imageUrl = await _openFileImage(),
+                        child: const Text("Open Image Picker"),
+                      ),
+                    ],
+                  ),
+                ):Container(),
 
                 Container(
                   padding: EdgeInsets.all(10),
@@ -587,6 +638,30 @@ class _multipleChoice extends State<multipleChoice> {
                   ),
                 ),
 
+                DropdownButton<String>(
+                  value: retryFlag,
+                  icon: Icon(Icons.arrow_downward),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      retryFlag = newValue;
+                    });
+                  },
+                  items: <String>['NONE', 'SUGGEST', 'REQUIRE']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+
                 NiceButton(
                   width: 500,
                   elevation: 1.0,
@@ -603,10 +678,17 @@ class _multipleChoice extends State<multipleChoice> {
                           "multichoices": [correctEditingController.text.trim(), answer2EditingController.text.trim(),
                             answer3EditingController.text.trim(), answer4EditingController.text.trim()],
                           "correctchoice": correctEditingController.text.trim(),
-                          "imagelink" : await imageRef.getDownloadURL(),
+                          "retryflag": retryFlag,
                           "prompt" : promptEditingController.text.trim()
                         }
                     );
+                    if (value) {
+                      pathPasser.updateData(
+                          {
+                            "imagelink": await imageRef.getDownloadURL(),
+                          }
+                      );
+                    }
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => Tasks(
                         taskName: namePasser),
@@ -614,6 +696,7 @@ class _multipleChoice extends State<multipleChoice> {
                     );
                     }
                     catch(e){
+                      print(e);
                       showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
@@ -641,6 +724,7 @@ class _freeTextState extends State<freeText> {
   String imageUrl;
   String videoUrl;
   String audioUrl;
+  bool value = false;
   firebase_storage.Reference imageRef, audioRef;
   Future<String> _openFileImage() async {
     setState(() => _loadingPath = true);
@@ -745,18 +829,6 @@ class _freeTextState extends State<freeText> {
                   child: Column(
                     children: <Widget>[
                       ElevatedButton(
-                        onPressed: () async => imageUrl = await _openFileImage(),
-                        child: const Text("Open Image Picker"),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                  child: Column(
-                    children: <Widget>[
-                      ElevatedButton(
                         onPressed: () async => audioUrl = await _openFileAudio(),
                         child: const Text("Open Audio Picker"),
                       ),
@@ -764,27 +836,37 @@ class _freeTextState extends State<freeText> {
                   ),
                 ),
 
-                /*Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: mediaEditingController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Media Link',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Include uploaded image: ',
+                      style: TextStyle(fontSize: 17.0),
                     ),
-                  ),
+                    SizedBox(width: 10),
+                    Checkbox(
+                      value: this.value,
+                      onChanged: (bool value) {
+                        setState(() {
+                          this.value = value;
+                        });
+                        print(value);
+                      },
+                    ),
+                  ],
                 ),
-
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: imageEditingController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Image Link (Optional)',
-                    ),
+                (value)
+                    ?Padding(
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () async => imageUrl = await _openFileImage(),
+                        child: const Text("Open Image Picker"),
+                      ),
+                    ],
                   ),
-                ),*/
+                ):Container(),
 
                 NiceButton(
                   width: 500,
@@ -801,7 +883,12 @@ class _freeTextState extends State<freeText> {
                             "prompt": promptEditingController.text.trim()
                         }
                       );
-
+                        if (value) {
+                          pathPasser.updateData({
+                            "imagelink": await imageRef.getDownloadURL(),
+                          }
+                          );
+                        }
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) =>
                               Tasks(taskName: namePasser),
@@ -833,6 +920,7 @@ class _videoPerception extends State<videoPerception> {
   List<Widget> course;
   String dropdownValue = "Free Text";
   String videoType = "YouTube Link";
+  String retryFlag = "NONE";
   bool isyoutube = true;
   String imageUrl;
   firebase_storage.Reference videoRef;
@@ -885,7 +973,6 @@ class _videoPerception extends State<videoPerception> {
   TextEditingController answer2EditingController = new TextEditingController();
   TextEditingController answer3EditingController = new TextEditingController();
   TextEditingController answer4EditingController = new TextEditingController();
-
   bool _visible = false;
   void _toggle() {
     if (dropdownValue == "Multiple Choice")
@@ -1003,8 +1090,8 @@ class _videoPerception extends State<videoPerception> {
                     );
                   }).toList(),
                 ),
-                Visibility(
-                  child: Column(
+                (_visible)
+                ?Column(
                       children: <Widget>[
                         Container(
                           padding: EdgeInsets.all(10),
@@ -1048,22 +1135,34 @@ class _videoPerception extends State<videoPerception> {
                             ),
                           ),
                         ),
-                      ]
-                  ),
-                  visible: _visible,
-                ),
 
-                /*Padding(
-                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                  child: Column(
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () async => videoUrl = await _openFileMedia(),
-                        child: const Text("Open Video Picker"),
-                      ),
-                    ],
-                  ),
-                ),*/
+                        DropdownButton<String>(
+                          value: retryFlag,
+                          icon: Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.deepPurple),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.black,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              retryFlag = newValue;
+                            });
+                            _toggle();
+                          },
+                          items: <String>['NONE', 'SUGGEST', 'REQUIRE']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+
+                      ]
+                  ):Container(),
 
                 NiceButton(
                   width: 500,
@@ -1087,8 +1186,8 @@ class _videoPerception extends State<videoPerception> {
                                   answer3EditingController.text.trim(),
                                   answer4EditingController.text.trim()
                                 ],
-                                "correctchoice": correctEditingController.text
-                                    .trim(),
+                                "correctchoice": correctEditingController.text.trim(),
+                                "retryflag": retryFlag,
                                 "prompt": promptEditingController.text.trim()
                               }
                           );
@@ -1120,8 +1219,8 @@ class _videoPerception extends State<videoPerception> {
                                   answer3EditingController.text.trim(),
                                   answer4EditingController.text.trim()
                                 ],
-                                "correctchoice": correctEditingController.text
-                                    .trim(),
+                                "correctchoice": correctEditingController.text.trim(),
+                                "retryflag": retryFlag,
                                 "prompt": promptEditingController.text.trim()
                               }
                           );
@@ -1174,6 +1273,7 @@ class _constrainedProdState extends State<constrainedProd> {
   String videoUrl;
   String audioUrl;
   bool _loadingPath;
+  bool value = false;
   Future<String> _openFileImage() async {
     setState(() => _loadingPath = true);
     FilePickerResult result;
@@ -1246,17 +1346,27 @@ class _constrainedProdState extends State<constrainedProd> {
                   ),
                 ),
 
-                /*Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: imageEditingController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Image Link (Optional)',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Include uploaded image: ',
+                      style: TextStyle(fontSize: 17.0),
                     ),
-                  ),
-                ),*/
-                Padding(
+                    SizedBox(width: 10),
+                    Checkbox(
+                      value: this.value,
+                      onChanged: (bool value) {
+                        setState(() {
+                          this.value = value;
+                        });
+                        print(value);
+                      },
+                    ),
+                  ],
+                ),
+                (value)
+                    ?Padding(
                   padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
                   child: Column(
                     children: <Widget>[
@@ -1266,7 +1376,7 @@ class _constrainedProdState extends State<constrainedProd> {
                       ),
                     ],
                   ),
-                ),
+                ):Container(),
 
                 NiceButton(
                   width: 500,
@@ -1279,12 +1389,19 @@ class _constrainedProdState extends State<constrainedProd> {
                       pathPasser.updateData(
                           {
                             "tasktype": "constproduction",
-                            "correctchoice": correctEditingController.text
-                                .trim(),
-                            "imagelink": await imageRef.getDownloadURL(),
+                            "correctchoice": correctEditingController.text.trim(),
                             "prompt": promptEditingController.text.trim()
                           }
                       );
+
+                      if (value)
+                      {
+                        pathPasser.updateData(
+                            {
+                              "imagelink": await imageRef.getDownloadURL(),
+                            }
+                        );
+                      }
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) =>
                             Tasks(
@@ -1320,6 +1437,7 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
   String imageUrl;
   String videoUrl;
   String audioUrl;
+  bool value = false;
   firebase_storage.Reference imageRef;
   bool _loadingPath;
   Future<String> _openFileImage() async {
@@ -1382,7 +1500,27 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
                 ),
 
 
-                Padding(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Include uploaded image: ',
+                      style: TextStyle(fontSize: 17.0),
+                    ),
+                    SizedBox(width: 10),
+                    Checkbox(
+                      value: this.value,
+                      onChanged: (bool value) {
+                        setState(() {
+                          this.value = value;
+                        });
+                        print(value);
+                      },
+                    ),
+                  ],
+                ),
+                (value)
+                    ?Padding(
                   padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
                   child: Column(
                     children: <Widget>[
@@ -1392,7 +1530,7 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
                       ),
                     ],
                   ),
-                ),
+                ):Container(),
 
                 NiceButton(
                   width: 500,
@@ -1405,10 +1543,18 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
                       pathPasser.updateData(
                           {
                             "tasktype": "unconstproduction",
-                            "imagelink": await imageRef.getDownloadURL(),
                             "prompt": promptEditingController.text.trim()
                           }
                       );
+                      
+                      if (value)
+                      {
+                        pathPasser.updateData(
+                          {
+                            "imagelink": await imageRef.getDownloadURL(),
+                          }
+                        );
+                      }
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) =>
                             Tasks(

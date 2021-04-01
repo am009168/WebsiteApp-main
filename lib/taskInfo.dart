@@ -65,6 +65,14 @@ class _infoState extends State<taskInfo> {
 
   }
 
+  void delete()
+  {
+    firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
+        .collection('Courses').doc(modName)
+        .collection('Modules').doc(lessonName)
+        .collection('Lessons').doc(namePasser)
+        .collection('Tasks').doc(widget.taskName).delete();
+  }
   @override
   Widget build(BuildContext context) {
     var pather = finPath.collection('Tasks').doc(widget.taskName);
@@ -77,10 +85,15 @@ class _infoState extends State<taskInfo> {
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.refresh),
-              tooltip: 'refresh courses',
+              icon: Icon(Icons.delete),
+              tooltip: 'Delete Task',
               onPressed: () {
-                setState(() {}) ;
+                delete();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Tasks(
+                      taskName: namePasser),
+                  )
+                );
               },
             ),
             IconButton(

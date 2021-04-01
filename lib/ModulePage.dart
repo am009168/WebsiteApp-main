@@ -93,12 +93,9 @@ class _ModulePageState extends State<ModulePage> {
                         icon: Icon(Icons.info),
                         tooltip: 'Get Course Information',
                         onPressed: () {
-                          setState(() {
-                          });
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Lessons(
-                              LessonName: document.data()["name"],
-                              LessonID: document.data()['id'],),
+                              LessonName: document.data()["name"],),
                           )
                           );}
                       ),

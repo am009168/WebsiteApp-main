@@ -23,6 +23,14 @@ class LessonInfo extends StatefulWidget {
 class _infoState extends State<LessonInfo> {
   TextEditingController nameEditingController = new TextEditingController();
 
+  void delete()
+  {
+    firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
+        .collection('Courses').doc(modName)
+        .collection('Modules').doc(lessonName)
+        .collection('Lessons').doc(widget.lessonName).delete();
+  }
+
   @override
 
   Widget build(BuildContext context) {
@@ -34,6 +42,19 @@ class _infoState extends State<LessonInfo> {
             style: TextStyle(fontSize: 18),
           ),
           actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.delete),
+              tooltip: 'Delete Task',
+              onPressed: () {
+                delete();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Lessons(
+                      LessonName: lessonName),
+                )
+                );
+              },
+            ),
+
             IconButton(
               icon: Icon(Icons.edit_outlined),
               tooltip: 'Edit Lesson',
