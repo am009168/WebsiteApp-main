@@ -33,9 +33,8 @@ class responses extends StatefulWidget {
 
 class _response extends State<responses> {
   TextEditingController imageEditingController = new TextEditingController();
-  AudioPlayer audioPlayer;
+  AudioPlayer audioPlayer = AudioPlayer();
   int index= 0;
-
   bool _visibleAudio = false;
   bool _visibleASR = false;
   void _toggle() {
@@ -68,6 +67,7 @@ class _response extends State<responses> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.answer[0]);
     var getterPath = infoPath.doc(widget.learner);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -201,8 +201,9 @@ class _response extends State<responses> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     RaisedButton(
-                                      onPressed: () => playRemote(
-                                          widget.mediaLink),
+                                      onPressed: (){
+                                        print(widget.answer[0]);
+                                        playRemote(widget.mediaLink);},
                                       child: Icon(Icons.play_arrow),
                                     ),
                                     RaisedButton(
@@ -262,8 +263,7 @@ class _response extends State<responses> {
                                                           child: Row(
                                                             children: [
                                                               RaisedButton(
-                                                                onPressed: () => playRemote(
-                                                                    widget.answer[index]),
+                                                                onPressed: () => playRemote(widget.answer[index]),
                                                                 child: Icon(Icons.play_arrow),
                                                               ),
                                                               RaisedButton(

@@ -1185,7 +1185,6 @@ class _freeTextState extends State<freeText> {
                                         pathPasser.updateData({
                                             "medialink": await audioRef.getDownloadURL(),
                                             "tasktype": "freetext",
-                                            "imagelink": await imageRef.getDownloadURL(),
                                             "prompt": promptEditingController.text.trim()
                                         }
                                       );
