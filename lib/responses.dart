@@ -174,7 +174,7 @@ class _response extends State<responses> {
                             new Text('\nNumber of User Attempts:\n', style: TextStyle(fontWeight: FontWeight.bold)),
                             StreamBuilder<DocumentSnapshot>(
                               stream: infoPath.document(widget.learner).snapshots(),
-                              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                                 if (snapshot.hasError) {
                                   return Text('Something went wrong');
                                 }

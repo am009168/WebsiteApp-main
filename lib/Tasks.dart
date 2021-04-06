@@ -34,6 +34,8 @@ class _TasksState extends State<Tasks> {
   Widget build(BuildContext context) {
     var lessonPath = userPath.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.taskName);
     finPath = lessonPath;
+    List<dynamic> tasks = List<dynamic>();
+
 
     namePasser = widget.taskName;
     return Scaffold(
@@ -116,7 +118,16 @@ class _TasksState extends State<Tasks> {
                             return new ListView(
                               shrinkWrap: true,
                               children: snapshot.data.documents.map((DocumentSnapshot document) {
+                                counter = 0;
                                 counter = snapshot.data.docs.length;
+                                print('break');
+                                tasks.clear();
+                                snapshot.data.docs.forEach((element) {
+
+                                  tasks.add(element.data()['orderid']);
+                                });
+                                tasks.sort();
+                                print(tasks.toString());
                                 return Card(
                                   elevation: 8.0,
                                   margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),

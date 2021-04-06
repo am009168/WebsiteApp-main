@@ -28,6 +28,7 @@ class _LessonsState extends State<Lessons> {
   @override
   Widget build(BuildContext context) {
     var modulePath = userPath.collection('Courses').doc(modName).collection('Modules').doc(widget.LessonName);
+    print(stuff);
     path = modulePath;
     lessonName = widget.LessonName;
     return Scaffold(
@@ -178,7 +179,8 @@ class CreateLesson extends StatefulWidget {
 
 class _CreateLessonState extends State<CreateLesson> {
   List<Widget> course;
-
+  DocumentReference getID = firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
+      .collection('Courses').doc(modName);
   TextEditingController nameEditingController = new TextEditingController();
 
   DateTime selectedDateOpen = DateTime.now();
@@ -188,7 +190,7 @@ class _CreateLessonState extends State<CreateLesson> {
   bool value = false;
   bool retry = false;
   bool open = false;
-
+  bool openToAll = false;
   Future<Null> _selectDateOpen(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -374,45 +376,109 @@ class _CreateLessonState extends State<CreateLesson> {
                                   ],
                                 ),
 
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Initialize Lesson as open for all: ',
+                                      style: TextStyle(fontSize: 17.0),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Checkbox(
+                                      value: this.openToAll,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          this.openToAll = value;
+                                        });
+                                        print(value);
+                                      },
+                                    ),
+                                  ],
+                                ),
+
                                 Container(
                                   child: Padding(
                                     padding: EdgeInsets.all(16),
                                     child: RaisedButton(
                                         child: Text("Create Lesson"),
-                                        onPressed: () {
-                                          if (value)
+                                        onPressed: () async{
+                                          if(openToAll)
                                           {
-                                            path.collection('Lessons').doc(nameEditingController.text.trim()).set(
-                                                {
-                                                  "hasfeedback" : [],
-                                                  "completedlearners" : [],
-                                                  "learnerids" : [],
-                                                  "retryflag": this.retry,
-                                                  "dateopen": selectedDateOpen.toString(),
-                                                  "dateclose": selectedDateClose.toString(),
-                                                  "designerid" : firebaseUser.uid,
-                                                  "isopen" : this.open,
-                                                  "id": nameEditingController.text.trim(),
-                                                  "name" : nameEditingController.text.trim(),
-                                                }
-                                            );
+                                            if (value)
+                                            {
+                                              path.collection('Lessons').doc(nameEditingController.text.trim()).set(
+                                                  {
+                                                    "hasfeedback" : [],
+                                                    "completedlearners" : [],
+                                                    "learnerids" : await getID.get().then((value) => value.data()['learnerids']),
+                                                    "retryflag": this.retry,
+                                                    "opentoall": this.openToAll,
+                                                    "dateopen": selectedDateOpen.toString(),
+                                                    "dateclose": selectedDateClose.toString(),
+                                                    "designerid" : firebaseUser.uid,
+                                                    "isopen" : this.open,
+                                                    "id": nameEditingController.text.trim(),
+                                                    "name" : nameEditingController.text.trim(),
+                                                  }
+                                              );
+                                            }
+                                            else
+                                            {
+                                              path.collection('Lessons').doc(nameEditingController.text.trim()).set(
+                                                  {
+                                                    "hasfeedback" : [],
+                                                    "completedlearners" : [],
+                                                    "learnerids" : await getID.get().then((value) => value.data()['learnerids']),
+                                                    "retryflag": this.retry,
+                                                    "opentoall": this.openToAll,
+                                                    "dateopen" : "1999-01-21 15:00:00.000",
+                                                    "dateclose" : "3021-01-21 15:00:00.000",
+                                                    "designerid" : firebaseUser.uid,
+                                                    "isopen" : this.open,
+                                                    "id": nameEditingController.text.trim(),
+                                                    "name" : nameEditingController.text.trim(),
+                                                  }
+                                              );
+                                            }
                                           }
                                           else
                                           {
-                                            path.collection('Lessons').doc(nameEditingController.text.trim()).set(
-                                                {
-                                                  "hasfeedback" : [],
-                                                  "completedlearners" : [],
-                                                  "learnerids" : [],
-                                                  "retryflag": this.retry,
-                                                  "dateopen" : "1999-01-21 15:00:00.000",
-                                                  "dateclose" : "3021-01-21 15:00:00.000",
-                                                  "designerid" : firebaseUser.uid,
-                                                  "isopen" : this.open,
-                                                  "id": nameEditingController.text.trim(),
-                                                  "name" : nameEditingController.text.trim(),
-                                                }
-                                            );
+                                            if (value)
+                                            {
+                                              path.collection('Lessons').doc(nameEditingController.text.trim()).set(
+                                                  {
+                                                    "hasfeedback" : [],
+                                                    "completedlearners" : [],
+                                                    "learnerids" : await getID.get().then((value) => value.data()['learnerids']),
+                                                    "retryflag": this.retry,
+                                                    "opentoall": this.openToAll,
+                                                    "dateopen": selectedDateOpen.toString(),
+                                                    "dateclose": selectedDateClose.toString(),
+                                                    "designerid" : firebaseUser.uid,
+                                                    "isopen" : this.open,
+                                                    "id": nameEditingController.text.trim(),
+                                                    "name" : nameEditingController.text.trim(),
+                                                  }
+                                              );
+                                            }
+                                            else
+                                            {
+                                              path.collection('Lessons').doc(nameEditingController.text.trim()).set(
+                                                  {
+                                                    "hasfeedback" : [],
+                                                    "completedlearners" : [],
+                                                    "learnerids" : await getID.get().then((value) => value.data()['learnerids']),
+                                                    "retryflag": this.retry,
+                                                    "opentoall": this.openToAll,
+                                                    "dateopen" : "1999-01-21 15:00:00.000",
+                                                    "dateclose" : "3021-01-21 15:00:00.000",
+                                                    "designerid" : firebaseUser.uid,
+                                                    "isopen" : this.open,
+                                                    "id": nameEditingController.text.trim(),
+                                                    "name" : nameEditingController.text.trim(),
+                                                  }
+                                              );
+                                            }
                                           }
                                           Navigator.pop(context, nameEditingController.text);
                                         }),

@@ -31,29 +31,31 @@ class _infoState extends State<taskInfo> {
     rows.add(row);
   }
   void createData() async{
-    List<List<String>> rows = List<List<String>>();
-    String name;
-    String response;
-    String taskID;
+    List<List<dynamic>> rows = List<List<dynamic>>();
     rows.add(["Name","Answers","Task Type"]);
-    List<String> row = List<String>();
-     firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
+    var hi;
+    var bye;
+    var hello;
+    var check;
+
+     await firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
         .collection('Courses').doc(modName)
         .collection('Modules').doc(lessonName)
         .collection('Lessons').doc(namePasser)
-        .collection('Tasks').doc(widget.taskName).collection("TaskResponses").snapshots().forEach((element) {
-          print('for each');
-      name = element.docs[0]["firstname"];
-      response = element.docs[0]["learnerresponses"].toString().replaceAll('[', '').replaceAll(']', '');
-      taskID = element.docs[0]["taskid"];
-      row.add(name);
-      row.add(response);
-      row.add(taskID);
-      rowStuff(row);
-      print(row);
-    });
-    //Now lets add 5 data rows
-    print("Pop");
+        .collection('Tasks').doc(widget.taskName).collection("TaskResponses").get().then((querySnapshot) {
+       querySnapshot.docs.forEach((result) {
+         List<dynamic> row = List<dynamic>();
+         hi = result.data()['firstname'] + " " + result.data()['lastname'];
+         bye = result.data()['learnerresponses'];
+         hello = result.data()['taskid'];
+         row.add(hi);
+         row.add(bye);
+         row.add(hello);
+         rows.add(row);
+       });
+     });
+    print(rows.toString());
+
     String csv = const ListToCsvConverter().convert(rows);//this csv variable holds entire csv data
     final bytes = utf8.encode(csv);//NOTE THAT HERE WE USED HTML PACKAGE
     final blob = html.Blob([bytes]);//It will create downloadable object
