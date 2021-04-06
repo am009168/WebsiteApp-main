@@ -90,303 +90,301 @@ class _response extends State<responses> {
           ),
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container( // image below the top bar
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    'assets/bg.jpg',
-                    fit: BoxFit.cover,
-                  ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Container( // image below the top bar
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.45,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  'assets/bg.jpg',
+                  fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                left:MediaQuery.of(context).size.width * 0.25,
-                top: MediaQuery.of(context).size.height * 0.42,
-                child: Card(
-                  elevation: 8.0,
-                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                  child: Container(
-                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                      child: Text("Response from " +widget.name,style: TextStyle(fontSize:50 ),)),
-                ),
+            ),
+            Positioned(
+              left:MediaQuery.of(context).size.width * 0.25,
+              top: MediaQuery.of(context).size.height * 0.42,
+              child: Card(
+                elevation: 8.0,
+                margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                    margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                    child: Text("Response from " +widget.name,style: TextStyle(fontSize:50 ),)),
               ),
-              Center(
-                child: Column(
-                  children: <Widget>[SizedBox(height: 50,),
-                    Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                    SizedBox(height: 175,),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 2)
-                      ),
-                      margin: const EdgeInsets.all(10.0),
-                      width: 1500.0,
-                      height: 500.0,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            new Text('Current Task ID:\n ' , style: TextStyle(fontWeight: FontWeight.bold),),
-                            StreamBuilder<DocumentSnapshot>(
-                              stream: infoPath.document(widget.learner).snapshots(),
+            ),
+            Center(
+              child: Column(
+                children: <Widget>[SizedBox(height: 50,),
+                  Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 2)
+                    ),
+                    margin: const EdgeInsets.all(10.0),
+                    width: 1500.0,
+                    height: 500.0,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          new Text('Current Task ID:\n ' , style: TextStyle(fontWeight: FontWeight.bold),),
+                          StreamBuilder<DocumentSnapshot>(
+                            stream: infoPath.document(widget.learner).snapshots(),
+                            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Something went wrong');
+                              }
+
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Text("Loading");
+                              }
+
+                              if(snapshot.hasData)
+                              {
+                                Map<String, dynamic> docField = snapshot.data.data();
+                                return Text(docField['taskid']);
+                              }
+                              return Text("error");
+                            },
+                          ),
+                          new Text('\nCurrent Task Type:\n', style: TextStyle(fontWeight: FontWeight.bold)),
+                          StreamBuilder<DocumentSnapshot>(
+                            stream: infoPath.document(widget.learner).snapshots(),
+                            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Something went wrong');
+                              }
+
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Text("Loading");
+                              }
+
+                              if(snapshot.hasData)
+                              {
+                                Map<String, dynamic> docField = snapshot.data.data();
+                                return Text(docField['tasktype']);
+                              }
+                              return Text("error");
+                            },
+                          ),
+                          new Text('\nNumber of User Attempts:\n', style: TextStyle(fontWeight: FontWeight.bold)),
+                          StreamBuilder<DocumentSnapshot>(
+                            stream: infoPath.document(widget.learner).snapshots(),
                               builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text('Something went wrong');
-                                }
+                              if (snapshot.hasError) {
+                                return Text('Something went wrong');
+                              }
 
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Text("Loading");
-                                }
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Text("Loading");
+                              }
 
-                                if(snapshot.hasData)
-                                {
-                                  Map<String, dynamic> docField = snapshot.data.data();
-                                  return Text(docField['taskid']);
-                                }
-                                return Text("error");
-                              },
-                            ),
-                            new Text('\nCurrent Task Type:\n', style: TextStyle(fontWeight: FontWeight.bold)),
-                            StreamBuilder<DocumentSnapshot>(
-                              stream: infoPath.document(widget.learner).snapshots(),
-                              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text('Something went wrong');
-                                }
-
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Text("Loading");
-                                }
-
-                                if(snapshot.hasData)
-                                {
-                                  Map<String, dynamic> docField = snapshot.data.data();
-                                  return Text(docField['tasktype']);
-                                }
-                                return Text("error");
-                              },
-                            ),
-                            new Text('\nNumber of User Attempts:\n', style: TextStyle(fontWeight: FontWeight.bold)),
-                            StreamBuilder<DocumentSnapshot>(
-                              stream: infoPath.document(widget.learner).snapshots(),
-                                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text('Something went wrong');
-                                }
-
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Text("Loading");
-                                }
-
-                                if(snapshot.hasData)
-                                {
-                                  Map<String, dynamic> docField = snapshot.data.data();
-                                  return Text(docField['attemptcount'].toString());
-                                }
-                                return Text("error");
-                              },
-                            ),
-                            (widget.mediaLink != null)
-                                ?Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                new Text("Prompt\n", style: TextStyle(fontWeight: FontWeight.bold)),
-                                new SizedBox(height: 30),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    RaisedButton(
-                                      onPressed: (){
-                                        print(widget.answer[0]);
-                                        playRemote(widget.mediaLink);},
-                                      child: Icon(Icons.play_arrow),
-                                    ),
-                                    RaisedButton(
-                                      onPressed: () => audioPlayer.pause(),
-                                      child: Icon(Icons.pause),
-                                    ),
-                                    RaisedButton(
-                                      onPressed: () => audioPlayer.stop(),
-                                      child: Icon(Icons.stop),
-                                    ),
-                                  ],
-                                ),
-                                new SizedBox(height: 30),
-                              ],
-                            ):Container(),
-                            new Text('\nResponses from Learner\n', style: TextStyle(fontWeight: FontWeight.bold)),
-                            Visibility(
-                              child: Column(
-                                  children: <Widget>[
-                                    SingleChildScrollView(
-                                      child: ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxWidth: screenWidth, maxHeight: screenHeight - 300),
-                                        child: ListView.separated(
-                                          padding: EdgeInsets.all(10),
-                                          itemCount: widget.answer.length,
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          separatorBuilder: (context, index) => Divider(
-                                            //color: Colors.blue[300],
-                                            color: Colors.black12,
-                                            height: 20,
-                                            thickness: 2,
-                                            // indent: 180,
-                                            //endIndent: 180,
-                                          ),
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              margin: const EdgeInsets.only(top: 10, bottom: 10),
-                                              child: ListView(
-                                                shrinkWrap: true,
-                                                children: [
-                                                  Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Text(
-                                                            "Attempt " + index.toString(),
-                                                            style: TextStyle(
-                                                                fontWeight: FontWeight.bold,
-                                                                decoration: TextDecoration.underline,
-                                                                fontSize: 20,
-                                                                color: Colors.blueAccent),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child: Row(
-                                                            children: [
-                                                              RaisedButton(
-                                                                onPressed: () => playRemote(widget.answer[index]),
-                                                                child: Icon(Icons.play_arrow),
-                                                              ),
-                                                              RaisedButton(
-                                                                onPressed: () => audioPlayer.pause(),
-                                                                child: Icon(Icons.pause),
-                                                              ),
-                                                              RaisedButton(
-                                                                onPressed: () => audioPlayer.stop(),
-                                                                child: Icon(Icons.stop),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ]),
-                                                  SizedBox(
-                                                    height: 20,
-                                                  ),
-                                                  (_visibleASR)
-                                                      ? Visibility(
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Text(
-                                                            "ASR Feedback: ",
-                                                            style: TextStyle(
-                                                                fontWeight: FontWeight.bold,
-                                                                decoration: TextDecoration.underline,
-                                                                fontSize: 20,
-                                                                color: Colors.blueAccent),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child: Text(
-                                                            widget.asr[index],
-                                                            style: TextStyle(
-                                                                fontWeight: FontWeight.bold, fontSize: 20),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    visible: _visibleASR,
-                                                  )
-                                                      :Container(),
-                                                ],
-                                              ),
-                                            );
-                                          },
+                              if(snapshot.hasData)
+                              {
+                                Map<String, dynamic> docField = snapshot.data.data();
+                                return Text(docField['attemptcount'].toString());
+                              }
+                              return Text("error");
+                            },
+                          ),
+                          (widget.mediaLink != null)
+                              ?Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              new Text("Prompt\n", style: TextStyle(fontWeight: FontWeight.bold)),
+                              new SizedBox(height: 30),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  RaisedButton(
+                                    onPressed: (){
+                                      print(widget.answer[0]);
+                                      playRemote(widget.mediaLink);},
+                                    child: Icon(Icons.play_arrow),
+                                  ),
+                                  RaisedButton(
+                                    onPressed: () => audioPlayer.pause(),
+                                    child: Icon(Icons.pause),
+                                  ),
+                                  RaisedButton(
+                                    onPressed: () => audioPlayer.stop(),
+                                    child: Icon(Icons.stop),
+                                  ),
+                                ],
+                              ),
+                              new SizedBox(height: 30),
+                            ],
+                          ):Container(),
+                          new Text('\nResponses from Learner\n', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Visibility(
+                            child: Column(
+                                children: <Widget>[
+                                  SingleChildScrollView(
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                          maxWidth: screenWidth, maxHeight: screenHeight - 300),
+                                      child: ListView.separated(
+                                        padding: EdgeInsets.all(10),
+                                        itemCount: widget.answer.length,
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        separatorBuilder: (context, index) => Divider(
+                                          //color: Colors.blue[300],
+                                          color: Colors.black12,
+                                          height: 20,
+                                          thickness: 2,
+                                          // indent: 180,
+                                          //endIndent: 180,
                                         ),
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            margin: const EdgeInsets.only(top: 10, bottom: 10),
+                                            child: ListView(
+                                              shrinkWrap: true,
+                                              children: [
+                                                Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          "Attempt " + index.toString(),
+                                                          style: TextStyle(
+                                                              fontWeight: FontWeight.bold,
+                                                              decoration: TextDecoration.underline,
+                                                              fontSize: 20,
+                                                              color: Colors.blueAccent),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Row(
+                                                          children: [
+                                                            RaisedButton(
+                                                              onPressed: () => playRemote(widget.answer[index]),
+                                                              child: Icon(Icons.play_arrow),
+                                                            ),
+                                                            RaisedButton(
+                                                              onPressed: () => audioPlayer.pause(),
+                                                              child: Icon(Icons.pause),
+                                                            ),
+                                                            RaisedButton(
+                                                              onPressed: () => audioPlayer.stop(),
+                                                              child: Icon(Icons.stop),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ]),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                (_visibleASR)
+                                                    ? Visibility(
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          "ASR Feedback: ",
+                                                          style: TextStyle(
+                                                              fontWeight: FontWeight.bold,
+                                                              decoration: TextDecoration.underline,
+                                                              fontSize: 20,
+                                                              color: Colors.blueAccent),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Text(
+                                                          widget.asr[index],
+                                                          style: TextStyle(
+                                                              fontWeight: FontWeight.bold, fontSize: 20),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  visible: _visibleASR,
+                                                )
+                                                    :Container(),
+                                              ],
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
-                                  ]
-                              ),
-                              visible: _visibleAudio,
+                                  ),
+                                ]
                             ),
+                            visible: _visibleAudio,
+                          ),
 
-                            Visibility(
-                              child: Column(
-                                  children: <Widget>[
-                                    StreamBuilder<DocumentSnapshot>(
-                                      stream: infoPath.document(widget.learner).snapshots(),
-                                      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                        if (snapshot.hasError) {
-                                          return Text('Something went wrong');
-                                        }
+                          Visibility(
+                            child: Column(
+                                children: <Widget>[
+                                  StreamBuilder<DocumentSnapshot>(
+                                    stream: infoPath.document(widget.learner).snapshots(),
+                                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                      if (snapshot.hasError) {
+                                        return Text('Something went wrong');
+                                      }
 
-                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                          return Text("Loading");
-                                        }
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return Text("Loading");
+                                      }
 
-                                        if(snapshot.hasData)
-                                        {
-                                          Map<String, dynamic> docField = snapshot.data.data();
-                                          return Text(docField['learnerresponses'].toString());
-                                        }
-                                        return Text("error");
-                                      },
-                                    ),
-                                  ]
-                              ),
-                              visible: !_visibleAudio,
+                                      if(snapshot.hasData)
+                                      {
+                                        Map<String, dynamic> docField = snapshot.data.data();
+                                        return Text(docField['learnerresponses'].toString());
+                                      }
+                                      return Text("error");
+                                    },
+                                  ),
+                                ]
                             ),
+                            visible: !_visibleAudio,
+                          ),
 
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: TextField(
-                                controller: imageEditingController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Give Feedback',
-                                ),
-                              ),
-                            ),
-                            Center(
-                              child: NiceButton(
-                                width: 500,
-                                elevation: 1.0,
-                                radius: 52.0,
-                                text: " Submit",
-                                background: Colors.black,
-                                onPressed: () {
-                                  getterPath.updateData({'designerfeedback': imageEditingController.text.trim()});
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => AlertDialog(
-                                        title: Text('Success!'),
-                                        content: Text('Feedback to user has been submitted'),
-                                      )
-                                  );
-                                  finPath.updateData({'hasfeedback': FieldValue.arrayUnion([widget.learner])});
-                                },
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            child: TextField(
+                              controller: imageEditingController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Give Feedback',
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Center(
+                            child: NiceButton(
+                              width: 500,
+                              elevation: 1.0,
+                              radius: 52.0,
+                              text: " Submit",
+                              background: Colors.black,
+                              onPressed: () {
+                                getterPath.updateData({'designerfeedback': imageEditingController.text.trim()});
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Text('Success!'),
+                                      content: Text('Feedback to user has been submitted'),
+                                    )
+                                );
+                                finPath.updateData({'hasfeedback': FieldValue.arrayUnion([widget.learner])});
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                  ),
 
-                  ],
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

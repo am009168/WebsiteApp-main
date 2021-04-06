@@ -69,109 +69,107 @@ class _editState extends State<editLesson> {
           ),
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container( // image below the top bar
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    'assets/bg.jpg',
-                    fit: BoxFit.cover,
-                  ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Container( // image below the top bar
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.45,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  'assets/bg.jpg',
+                  fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                left:MediaQuery.of(context).size.width * 0.35,
-                top: MediaQuery.of(context).size.height * 0.42,
-                child: Card(
-                  elevation: 8.0,
-                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                  child: Container(
-                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                      child: Text("Edit Lesson Dates",style: TextStyle(fontSize:50 ),)),
-                ),
+            ),
+            Positioned(
+              left:MediaQuery.of(context).size.width * 0.35,
+              top: MediaQuery.of(context).size.height * 0.42,
+              child: Card(
+                elevation: 8.0,
+                margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                    margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                    child: Text("Edit Lesson Dates",style: TextStyle(fontSize:50 ),)),
               ),
-              Center(
-                child: Column(
-                  children: [
-                    Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                    SizedBox(height: 175,),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 2)
-                      ),
-                      margin: const EdgeInsets.all(10.0),
-                      width: 1500.0,
-                      height: 500.0,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            Text("Date open: " + "${selectedDateOpen.toLocal()}".split(' ')[0]),
-                            SizedBox(height: 20.0,),
-                            RaisedButton(
-                              onPressed: () => _selectDateOpen(context),
-                              child: Text('Select Open Date'),
-                            ),
-                            SizedBox(height: 50.0,),
-                            Text("Date close: " + "${selectedDateClose.toLocal()}".split(' ')[0]),
-                            SizedBox(height: 20.0,),
-                            RaisedButton(
-                              onPressed: () => _selectDateClose(context),
-                              child: Text('Select Close Date'),
-                            ),
+            ),
+            Center(
+              child: Column(
+                children: [
+                  Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 2)
+                    ),
+                    margin: const EdgeInsets.all(10.0),
+                    width: 1500.0,
+                    height: 500.0,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          Text("Date open: " + "${selectedDateOpen.toLocal()}".split(' ')[0]),
+                          SizedBox(height: 20.0,),
+                          RaisedButton(
+                            onPressed: () => _selectDateOpen(context),
+                            child: Text('Select Open Date'),
+                          ),
+                          SizedBox(height: 50.0,),
+                          Text("Date close: " + "${selectedDateClose.toLocal()}".split(' ')[0]),
+                          SizedBox(height: 20.0,),
+                          RaisedButton(
+                            onPressed: () => _selectDateClose(context),
+                            child: Text('Select Close Date'),
+                          ),
 
-                            SizedBox(height: 30.0,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Make the Lesson open to users: ',
-                                  style: TextStyle(fontSize: 17.0),
-                                ),
-                                SizedBox(width: 10),
-                                Checkbox(
-                                  value: this.value,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.value = value;
-                                    });
-                                    print(value);
-                                  },
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 20.0,),
-                            Container(
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: RaisedButton(
-                                    child: Text("Save Info"),
-                                    onPressed: () async{
-                                      infoGetter.updateData(
-                                          {
-                                            'isopen': value,
-                                            'dateopen': selectedDateOpen.toString(),
-                                            'dateclose': selectedDateClose.toString()
-                                          });
-                                      Navigator.pop(context, nameEditingController.text);
-                                    }),
+                          SizedBox(height: 30.0,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Make the Lesson open to users: ',
+                                style: TextStyle(fontSize: 17.0),
                               ),
+                              SizedBox(width: 10),
+                              Checkbox(
+                                value: this.value,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    this.value = value;
+                                  });
+                                  print(value);
+                                },
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: 20.0,),
+                          Container(
+                            child: Padding(
+                              padding: EdgeInsets.all(16),
+                              child: RaisedButton(
+                                  child: Text("Save Info"),
+                                  onPressed: () async{
+                                    infoGetter.updateData(
+                                        {
+                                          'isopen': value,
+                                          'dateopen': selectedDateOpen.toString(),
+                                          'dateclose': selectedDateClose.toString()
+                                        });
+                                    Navigator.pop(context, nameEditingController.text);
+                                  }),
                             ),
-                             //Text
-                            SizedBox(height: 100),
-                          ],
-                        ),
+                          ),
+                           //Text
+                          SizedBox(height: 100),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

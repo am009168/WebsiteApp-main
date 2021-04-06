@@ -119,108 +119,106 @@ class _infoState extends State<taskInfo> {
           ),
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container( // image below the top bar
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    'assets/bg.jpg',
-                    fit: BoxFit.cover,
-                  ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Container( // image below the top bar
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.45,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  'assets/bg.jpg',
+                  fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                left:MediaQuery.of(context).size.width * 0.38,
-                top: MediaQuery.of(context).size.height * 0.42,
-                child: Card(
-                  elevation: 8.0,
-                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                  child: Container(
-                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                      child: Text('Task Information',style: TextStyle(fontSize:50 ),)),
-                ),
+            ),
+            Positioned(
+              left:MediaQuery.of(context).size.width * 0.38,
+              top: MediaQuery.of(context).size.height * 0.42,
+              child: Card(
+                elevation: 8.0,
+                margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                    margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                    child: Text('Task Information',style: TextStyle(fontSize:50 ),)),
               ),
-              Center(
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 50,),
-                    Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                    SizedBox(height: 175,),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: 2)
-                      ),
-                      margin: const EdgeInsets.all(10.0),
-                      width: 1500.0,
-                      height: 500.0,
-                      child: SingleChildScrollView(
-                        child: StreamBuilder<QuerySnapshot>(
-                          stream: pather.collection('TaskResponses').snapshots(),
-                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            ),
+            Center(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 50,),
+                  Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 2)
+                    ),
+                    margin: const EdgeInsets.all(10.0),
+                    width: 1500.0,
+                    height: 500.0,
+                    child: SingleChildScrollView(
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: pather.collection('TaskResponses').snapshots(),
+                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
-                            if (snapshot.hasError) {
-                              return Text('Something went wrong');
-                            }
+                          if (snapshot.hasError) {
+                            return Text('Something went wrong');
+                          }
 
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Text("Loading");
-                            }
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Text("Loading");
+                          }
 
-                            return new ListView(
-                              shrinkWrap: true,
-                              children: snapshot.data.documents.map((DocumentSnapshot document) {
-                                return Card(
-                                  elevation: 8.0,
-                                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
-                                    child: new ListTile(
-                                      title: new Text(document.data()['firstname'] + ' ' +document.data()['lastname'], style: TextStyle(color: Colors.white)),
-                                      trailing: IconButton(
-                                          icon: Icon(Icons.info, color: Colors.white),
-                                          tooltip: 'Get Learner Information',
-                                          onPressed: () {
-                                            setState(() {
-                                            });
-                                            Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => responses(
-                                                learner: document.data()['learnerid'],
-                                                name: document.data()['firstname'] + ' ' +document.data()['lastname'],
-                                                mediaLink: widget.mediaLink,
-                                                answer: document.data()["learnerresponses"],
-                                                asr: document.data()["asrfeedback"],
-                                                type: widget.taskType
-                                                ),
-                                            )
-                                            );}
-                                      ),
-                                      leading: IconButton(
-                                          icon: Icon(Icons.file_copy),
-                                          tooltip: 'Generate CSV',
-                                          onPressed: () {
-                                            setState(() {
-                                            });
-                                          }
-                                      ),
+                          return new ListView(
+                            shrinkWrap: true,
+                            children: snapshot.data.documents.map((DocumentSnapshot document) {
+                              return Card(
+                                elevation: 8.0,
+                                margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                child: Container(
+                                  decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                                  child: new ListTile(
+                                    title: new Text(document.data()['firstname'] + ' ' +document.data()['lastname'], style: TextStyle(color: Colors.white)),
+                                    trailing: IconButton(
+                                        icon: Icon(Icons.info, color: Colors.white),
+                                        tooltip: 'Get Learner Information',
+                                        onPressed: () {
+                                          setState(() {
+                                          });
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                            builder: (context) => responses(
+                                              learner: document.data()['learnerid'],
+                                              name: document.data()['firstname'] + ' ' +document.data()['lastname'],
+                                              mediaLink: widget.mediaLink,
+                                              answer: document.data()["learnerresponses"],
+                                              asr: document.data()["asrfeedback"],
+                                              type: widget.taskType
+                                              ),
+                                          )
+                                          );}
+                                    ),
+                                    leading: IconButton(
+                                        icon: Icon(Icons.file_copy),
+                                        tooltip: 'Generate CSV',
+                                        onPressed: () {
+                                          setState(() {
+                                          });
+                                        }
                                     ),
                                   ),
-                                );
-                              }).toList(),
-                            );
-                          },
-                        ),
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        },
                       ),
                     ),
-                    SizedBox(height: 100),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 100),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

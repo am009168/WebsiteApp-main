@@ -56,136 +56,134 @@ class _creatorState extends State<taskCreater> {
           ),
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container( // image below the top bar
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    'assets/bg.jpg',
-                    fit: BoxFit.cover,
-                  ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Container( // image below the top bar
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.45,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  'assets/bg.jpg',
+                  fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                left:MediaQuery.of(context).size.width * 0.35,
-                top: MediaQuery.of(context).size.height * 0.42,
-                child: Card(
-                  elevation: 8.0,
-                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                  child: Container(
-                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                      child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
-                ),
+            ),
+            Positioned(
+              left:MediaQuery.of(context).size.width * 0.35,
+              top: MediaQuery.of(context).size.height * 0.42,
+              child: Card(
+                elevation: 8.0,
+                margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                    margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                    child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
               ),
-              Center(
-                child: Column(
-                  children: [
-                    Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                    SizedBox(height: 175,),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 2)
-                      ),
-                      margin: const EdgeInsets.all(10.0),
-                      width: 1500.0,
-                      height: 500.0,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            Text("\n"),
-                            NiceButton(
-                              width: 450,
-                              elevation: 1.0,
-                              radius: 0,
-                              text: " Instruction Task",
-                              background: Colors.black,
-                              gradientColors: [secondColor, firstColor],
-                              icon: Icons.new_releases_outlined,
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => new Instruction()));
-                              },
-                            ),
-                            Text("\n"),
-                            NiceButton(
-                              width: 450,
-                              radius: 0,
-                              padding: const EdgeInsets.all(15),
-                              text: "Multiple Choice Task",
-                              gradientColors: [secondColor, firstColor],
-                              icon: Icons.art_track,
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => new multipleChoice()));
-                              },
-                            ),
-                            Text("\n"),
-                            NiceButton(
-                              width: 450,
-                              radius: 0,
-                              padding: const EdgeInsets.all(15),
-                              text: "Free Text Perception Task",
-                              gradientColors: [secondColor, firstColor],
-                              icon: Icons.keyboard,
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => new freeText()));
-                              },
-                            ),
-                            Text("\n"),
-                            NiceButton(
-                              width: 450,
-                              radius: 0,
-                              padding: const EdgeInsets.all(15),
-                              text: "Video Perception Task",
-                              gradientColors: [secondColor, firstColor],
-                              icon: Icons.video_collection_rounded,
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => new videoPerception()));
-                              },
-                            ),
-                            Text("\n"),
-                            NiceButton(
-                              width: 450,
-                              radius: 0,
-                              padding: const EdgeInsets.all(15),
-                              text: "Constrained Production Task",
-                              icon: Icons.speaker_phone,
-                              gradientColors: [secondColor, firstColor],
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => new constrainedProd()));
-                              },
-                            ),
-                            Text("\n"),
-                            NiceButton(
-                              width: 450,
-                              radius: 0,
-                              padding: const EdgeInsets.all(15),
-                              icon: Icons.speaker_phone,
-                              text: "Unconstrained Production Task",
-                              gradientColors: [secondColor, firstColor],
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => new unconstrainedProd()));
-                              },
-                            ),
+            ),
+            Center(
+              child: Column(
+                children: [
+                  Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 2)
+                    ),
+                    margin: const EdgeInsets.all(10.0),
+                    width: 1500.0,
+                    height: 500.0,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          Text("\n"),
+                          NiceButton(
+                            width: 450,
+                            elevation: 1.0,
+                            radius: 0,
+                            text: " Instruction Task",
+                            background: Colors.black,
+                            gradientColors: [secondColor, firstColor],
+                            icon: Icons.new_releases_outlined,
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => new Instruction()));
+                            },
+                          ),
+                          Text("\n"),
+                          NiceButton(
+                            width: 450,
+                            radius: 0,
+                            padding: const EdgeInsets.all(15),
+                            text: "Multiple Choice Task",
+                            gradientColors: [secondColor, firstColor],
+                            icon: Icons.art_track,
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => new multipleChoice()));
+                            },
+                          ),
+                          Text("\n"),
+                          NiceButton(
+                            width: 450,
+                            radius: 0,
+                            padding: const EdgeInsets.all(15),
+                            text: "Free Text Perception Task",
+                            gradientColors: [secondColor, firstColor],
+                            icon: Icons.keyboard,
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => new freeText()));
+                            },
+                          ),
+                          Text("\n"),
+                          NiceButton(
+                            width: 450,
+                            radius: 0,
+                            padding: const EdgeInsets.all(15),
+                            text: "Video Perception Task",
+                            gradientColors: [secondColor, firstColor],
+                            icon: Icons.video_collection_rounded,
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => new videoPerception()));
+                            },
+                          ),
+                          Text("\n"),
+                          NiceButton(
+                            width: 450,
+                            radius: 0,
+                            padding: const EdgeInsets.all(15),
+                            text: "Constrained Production Task",
+                            icon: Icons.speaker_phone,
+                            gradientColors: [secondColor, firstColor],
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => new constrainedProd()));
+                            },
+                          ),
+                          Text("\n"),
+                          NiceButton(
+                            width: 450,
+                            radius: 0,
+                            padding: const EdgeInsets.all(15),
+                            icon: Icons.speaker_phone,
+                            text: "Unconstrained Production Task",
+                            gradientColors: [secondColor, firstColor],
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => new unconstrainedProd()));
+                            },
+                          ),
 
-                            SizedBox(height: 100),
-                          ],
-                        ),
+                          SizedBox(height: 100),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -240,85 +238,83 @@ class _Instruction extends State<Instruction> {
           ),
         ),
       ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Container( // image below the top bar
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      'assets/bg.jpg',
-                      fit: BoxFit.cover,
-                    ),
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bg.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  left:MediaQuery.of(context).size.width * 0.35,
-                  top: MediaQuery.of(context).size.height * 0.42,
-                  child: Card(
-                    elevation: 8.0,
-                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                    child: Container(
-                        margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                        child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
-                  ),
+              ),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.35,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
                 ),
-                Center(
-                  child: Column(
-                    children: [
-                      Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                      SizedBox(height: 175,),
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 2)
-                        ),
-                        margin: const EdgeInsets.all(10.0),
-                        width: 1500.0,
-                        height: 500.0,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                child: TextField(
-                                  controller: promptEditingController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Question Prompt',
-                                  ),
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 2)
+                      ),
+                      margin: const EdgeInsets.all(10.0),
+                      width: 1500.0,
+                      height: 500.0,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              child: TextField(
+                                controller: promptEditingController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Question Prompt',
                                 ),
                               ),
+                            ),
 
 
-                              NiceButton(
-                                width: 500,
-                                elevation: 1.0,
-                                radius: 52.0,
-                                text: " Next Screen",
-                                background: Colors.black,
-                                onPressed: () {
-                                  pathPasser.updateData(
-                                      {
-                                        "tasktype" : "instruction",
-                                        "prompt" : promptEditingController.text.trim()
-                                      }
-                                  );
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => new instructionAdder()));
-                                },
-                              ),
-                            ],
-                          ),
+                            NiceButton(
+                              width: 500,
+                              elevation: 1.0,
+                              radius: 52.0,
+                              text: " Next Screen",
+                              background: Colors.black,
+                              onPressed: () {
+                                pathPasser.updateData(
+                                    {
+                                      "tasktype" : "instruction",
+                                      "prompt" : promptEditingController.text.trim()
+                                    }
+                                );
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => new instructionAdder()));
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
     );
@@ -442,175 +438,173 @@ class _instructionAdderState extends State<instructionAdder> {
           ),
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container( // image below the top bar
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    'assets/bg.jpg',
-                    fit: BoxFit.cover,
-                  ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Container( // image below the top bar
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.45,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  'assets/bg.jpg',
+                  fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                left:MediaQuery.of(context).size.width * 0.35,
-                top: MediaQuery.of(context).size.height * 0.42,
-                child: Card(
-                  elevation: 8.0,
-                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                  child: Container(
-                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                      child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
-                ),
+            ),
+            Positioned(
+              left:MediaQuery.of(context).size.width * 0.35,
+              top: MediaQuery.of(context).size.height * 0.42,
+              child: Card(
+                elevation: 8.0,
+                margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                    margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                    child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
               ),
-              Center(
-                child: Column(
-                  children: [
-                    Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                    SizedBox(height: 175,),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 2)
-                      ),
-                      margin: const EdgeInsets.all(10.0),
-                      width: 1500.0,
-                      height: 500.0,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: TextField(
-                                controller: wordEditingController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Word ',
-                                ),
+            ),
+            Center(
+              child: Column(
+                children: [
+                  Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 2)
+                    ),
+                    margin: const EdgeInsets.all(10.0),
+                    width: 1500.0,
+                    height: 500.0,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            child: TextField(
+                              controller: wordEditingController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Word ',
                               ),
                             ),
+                          ),
 
 
 
-                            Padding(
-                              padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                              child: Column(
-                                children: <Widget>[
-                                  ElevatedButton(
-                                    onPressed: () async => await _openFileAudio(),
-                                    child: const Text("Open Audio Picker"),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Include uploaded image: ',
-                                  style: TextStyle(fontSize: 17.0),
-                                ),
-                                SizedBox(width: 10),
-                                Checkbox(
-                                  value: this.value,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.value = value;
-                                    });
-                                    print(value);
-                                  },
+                          Padding(
+                            padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                            child: Column(
+                              children: <Widget>[
+                                ElevatedButton(
+                                  onPressed: () async => await _openFileAudio(),
+                                  child: const Text("Open Audio Picker"),
                                 ),
                               ],
                             ),
-                            (value)
-                                ?Padding(
-                              padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                              child: Column(
-                                children: <Widget>[
-                                  ElevatedButton(
-                                    onPressed: () async => imageUrl = await _openFileImage(),
-                                    child: const Text("Open Image Picker"),
-                                  ),
-                                ],
+                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Include uploaded image: ',
+                                style: TextStyle(fontSize: 17.0),
                               ),
-                            ):Container(),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                NiceButton(
-                                  width: 500,
-                                  elevation: 1.0,
-                                  radius: 52.0,
-                                  text: " Submit",
-                                  background: Colors.black,
-                                  onPressed: () async{
-                                    if(value)
-                                    {
-                                      imageArr.add(await imageRef.getDownloadURL());
-                                    }
-
-                                    else
-                                      imageArr.add("NONE");
-
-                                    audioArr.add(await audioRef.getDownloadURL());
-                                    pathPasser.updateData({'instructionwords': FieldValue.arrayUnion([wordEditingController.text.trim()])});
-                                    pathPasser.update(
-                                        {
-
-                                          "instructionmedias": audioArr,
-                                          "instructionimages" : imageArr,
-                                        }
-
-                                    );
-                                    audioArr.clear();
-                                    imageArr.clear();
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Tasks(
-                                          taskName: namePasser),
-                                    )
-                                    );
-                                  },
+                              SizedBox(width: 10),
+                              Checkbox(
+                                value: this.value,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    this.value = value;
+                                  });
+                                  print(value);
+                                },
+                              ),
+                            ],
+                          ),
+                          (value)
+                              ?Padding(
+                            padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                            child: Column(
+                              children: <Widget>[
+                                ElevatedButton(
+                                  onPressed: () async => imageUrl = await _openFileImage(),
+                                  child: const Text("Open Image Picker"),
                                 ),
-
-                                NiceButton(
-                                  width: 500,
-                                  elevation: 1.0,
-                                  radius: 52.0,
-                                  text: "Add More",
-                                  background: Colors.black,
-                                  onPressed: () async{
-                                    if(value)
-                                    {
-                                      imageArr.add(await imageRef.getDownloadURL());
-                                    }
-                                    else
-                                      imageArr.add("NONE");
-
-                                    audioArr.add(await audioRef.getDownloadURL());
-                                    print(imageArr);
-                                    pathPasser.updateData({'instructionwords': FieldValue.arrayUnion([wordEditingController.text.trim()])});
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => new instructionAdder()));
-                                  },
-                                ),
-
                               ],
                             ),
-                          ],
-                        ),
+                          ):Container(),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              NiceButton(
+                                width: 500,
+                                elevation: 1.0,
+                                radius: 52.0,
+                                text: " Submit",
+                                background: Colors.black,
+                                onPressed: () async{
+                                  if(value)
+                                  {
+                                    imageArr.add(await imageRef.getDownloadURL());
+                                  }
+
+                                  else
+                                    imageArr.add("NONE");
+
+                                  audioArr.add(await audioRef.getDownloadURL());
+                                  pathPasser.updateData({'instructionwords': FieldValue.arrayUnion([wordEditingController.text.trim()])});
+                                  pathPasser.update(
+                                      {
+
+                                        "instructionmedias": audioArr,
+                                        "instructionimages" : imageArr,
+                                      }
+
+                                  );
+                                  audioArr.clear();
+                                  imageArr.clear();
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Tasks(
+                                        taskName: namePasser),
+                                  )
+                                  );
+                                },
+                              ),
+
+                              NiceButton(
+                                width: 500,
+                                elevation: 1.0,
+                                radius: 52.0,
+                                text: "Add More",
+                                background: Colors.black,
+                                onPressed: () async{
+                                  if(value)
+                                  {
+                                    imageArr.add(await imageRef.getDownloadURL());
+                                  }
+                                  else
+                                    imageArr.add("NONE");
+
+                                  audioArr.add(await audioRef.getDownloadURL());
+                                  print(imageArr);
+                                  pathPasser.updateData({'instructionwords': FieldValue.arrayUnion([wordEditingController.text.trim()])});
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => new instructionAdder()));
+                                },
+                              ),
+
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -745,223 +739,221 @@ class _multipleChoice extends State<multipleChoice> {
             ),
           ),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Container( // image below the top bar
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      'assets/bg.jpg',
-                      fit: BoxFit.cover,
-                    ),
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bg.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  left:MediaQuery.of(context).size.width * 0.35,
-                  top: MediaQuery.of(context).size.height * 0.42,
-                  child: Card(
-                    elevation: 8.0,
-                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                    child: Container(
-                        margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                        child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
-                  ),
+              ),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.35,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
                 ),
-                Center(
-                    child: Column(
-                      children: [
-                        Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                        SizedBox(height: 175,),
-                        Container(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: promptEditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Question Prompt',
-                                    ),
+              ),
+              Center(
+                  child: Column(
+                    children: [
+                      Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                      Container(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: promptEditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Question Prompt',
                                   ),
                                 ),
+                              ),
 
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ElevatedButton(
-                                        onPressed: () async => audioUrl = await _openFileAudio(),
-                                        child: const Text("Open Audio Picker"),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Include uploaded image: ',
-                                      style: TextStyle(fontSize: 17.0),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Checkbox(
-                                      value: this.value,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          this.value = value;
-                                        });
-                                        print(value);
-                                      },
+                              Padding(
+                                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    ElevatedButton(
+                                      onPressed: () async => audioUrl = await _openFileAudio(),
+                                      child: const Text("Open Audio Picker"),
                                     ),
                                   ],
                                 ),
-                                (value)
-                                ?Padding(
-                                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ElevatedButton(
-                                        onPressed: () async => imageUrl = await _openFileImage(),
-                                        child: const Text("Open Image Picker"),
-                                      ),
-                                    ],
-                                  ),
-                                ):Container(),
+                              ),
 
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: correctEditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Correct Answer',
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Include uploaded image: ',
+                                    style: TextStyle(fontSize: 17.0),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Checkbox(
+                                    value: this.value,
+                                    onChanged: (bool value) {
+                                      setState(() {
+                                        this.value = value;
+                                      });
+                                      print(value);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              (value)
+                              ?Padding(
+                                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    ElevatedButton(
+                                      onPressed: () async => imageUrl = await _openFileImage(),
+                                      child: const Text("Open Image Picker"),
                                     ),
-                                  ),
+                                  ],
                                 ),
+                              ):Container(),
 
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: answer2EditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Multiple Choice Answer 2',
-                                    ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: correctEditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Correct Answer',
                                   ),
                                 ),
+                              ),
 
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: answer3EditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Multi Choice Answer 3',
-                                    ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: answer2EditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Multiple Choice Answer 2',
                                   ),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: answer4EditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Multi Choice Answer 4',
-                                    ),
-                                  ),
-                                ),
+                              ),
 
-                                DropdownButton<String>(
-                                  value: retryFlag,
-                                  icon: Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: TextStyle(color: Colors.deepPurple),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Colors.black,
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: answer3EditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Multi Choice Answer 3',
                                   ),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      retryFlag = newValue;
-                                    });
-                                  },
-                                  items: <String>['NONE', 'SUGGEST', 'REQUIRE']
-                                      .map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
                                 ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: answer4EditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Multi Choice Answer 4',
+                                  ),
+                                ),
+                              ),
 
-                                NiceButton(
-                                  width: 500,
-                                  elevation: 1.0,
-                                  radius: 52.0,
-                                  text: " Submit",
-                                  background: Colors.black,
-                                  onPressed: () async{
-                                    try{
-                                      List pass = [
-                                        correctEditingController.text.trim(),
-                                        answer2EditingController.text.trim(),
-                                        answer3EditingController.text.trim(),
-                                        answer4EditingController.text.trim()
-                                      ];
-                                      pass.shuffle();
+                              DropdownButton<String>(
+                                value: retryFlag,
+                                icon: Icon(Icons.arrow_downward),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: TextStyle(color: Colors.deepPurple),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.black,
+                                ),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    retryFlag = newValue;
+                                  });
+                                },
+                                items: <String>['NONE', 'SUGGEST', 'REQUIRE']
+                                    .map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+
+                              NiceButton(
+                                width: 500,
+                                elevation: 1.0,
+                                radius: 52.0,
+                                text: " Submit",
+                                background: Colors.black,
+                                onPressed: () async{
+                                  try{
+                                    List pass = [
+                                      correctEditingController.text.trim(),
+                                      answer2EditingController.text.trim(),
+                                      answer3EditingController.text.trim(),
+                                      answer4EditingController.text.trim()
+                                    ];
+                                    pass.shuffle();
+                                  pathPasser.updateData(
+                                      {
+                                        "retryflag": "none",
+                                        "medialink" : await audioRef.getDownloadURL(),
+                                        "tasktype" : "multiplechoice",
+                                        "multichoices": pass,
+                                        "correctchoice": correctEditingController.text.trim(),
+                                        "retryflag": retryFlag,
+                                        "prompt" : promptEditingController.text.trim()
+                                      }
+                                  );
+                                  if (value) {
                                     pathPasser.updateData(
                                         {
-                                          "retryflag": "none",
-                                          "medialink" : await audioRef.getDownloadURL(),
-                                          "tasktype" : "multiplechoice",
-                                          "multichoices": pass,
-                                          "correctchoice": correctEditingController.text.trim(),
-                                          "retryflag": retryFlag,
-                                          "prompt" : promptEditingController.text.trim()
+                                          "imagelink": await imageRef.getDownloadURL(),
                                         }
                                     );
-                                    if (value) {
-                                      pathPasser.updateData(
-                                          {
-                                            "imagelink": await imageRef.getDownloadURL(),
-                                          }
-                                      );
-                                    }
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Tasks(
-                                        taskName: namePasser),
-                                    )
+                                  }
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Tasks(
+                                      taskName: namePasser),
+                                  )
+                                  );
+                                  }
+                                  catch(e){
+                                    print(e);
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                          title: Text('Wait!'),
+                                          content: Text('Please wait while we upload your file(s)'),
+                                        )
                                     );
-                                    }
-                                    catch(e){
-                                      print(e);
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                            title: Text('Wait!'),
-                                            content: Text('Please wait while we upload your file(s)'),
-                                          )
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    )
-                ),
-              ],
-            ),
+                      ),
+                    ],
+                  )
+              ),
+            ],
           ),
         )
     );
@@ -1078,148 +1070,146 @@ class _freeTextState extends State<freeText> {
             ),
           ),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Container( // image below the top bar
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      'assets/bg.jpg',
-                      fit: BoxFit.cover,
-                    ),
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bg.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  left:MediaQuery.of(context).size.width * 0.35,
-                  top: MediaQuery.of(context).size.height * 0.42,
-                  child: Card(
-                    elevation: 8.0,
-                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                    child: Container(
-                        margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                        child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
-                  ),
+              ),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.35,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
                 ),
-                Center(
-                    child: Column(
-                      children: [
-                        Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                        SizedBox(height: 175,),
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 2)
-                          ),
-                          margin: const EdgeInsets.all(10.0),
-                          width: 1500.0,
-                          height: 500.0,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: promptEditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Question Prompt',
-                                    ),
+              ),
+              Center(
+                  child: Column(
+                    children: [
+                      Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2)
+                        ),
+                        margin: const EdgeInsets.all(10.0),
+                        width: 1500.0,
+                        height: 500.0,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: promptEditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Question Prompt',
                                   ),
                                 ),
+                              ),
 
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ElevatedButton(
-                                        onPressed: () async => audioUrl = await _openFileAudio(),
-                                        child: const Text("Open Audio Picker"),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Include uploaded image: ',
-                                      style: TextStyle(fontSize: 17.0),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Checkbox(
-                                      value: this.value,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          this.value = value;
-                                        });
-                                        print(value);
-                                      },
+                              Padding(
+                                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    ElevatedButton(
+                                      onPressed: () async => audioUrl = await _openFileAudio(),
+                                      child: const Text("Open Audio Picker"),
                                     ),
                                   ],
                                 ),
-                                (value)
-                                    ?Padding(
-                                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ElevatedButton(
-                                        onPressed: () async => imageUrl = await _openFileImage(),
-                                        child: const Text("Open Image Picker"),
-                                      ),
-                                    ],
+                              ),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Include uploaded image: ',
+                                    style: TextStyle(fontSize: 17.0),
                                   ),
-                                ):Container(),
-                                SizedBox(height: 25,),
-                                NiceButton(
-                                  width: 500,
-                                  elevation: 1.0,
-                                  radius: 52.0,
-                                  text: " Submit",
-                                  background: Colors.black,
-                                  onPressed: () async {
-                                    try {
-                                        pathPasser.updateData({
-                                            "medialink": await audioRef.getDownloadURL(),
-                                            "tasktype": "freetext",
-                                            "prompt": promptEditingController.text.trim()
-                                        }
-                                      );
-                                        if (value) {
-                                          pathPasser.updateData({
-                                            "imagelink": await imageRef.getDownloadURL(),
-                                          }
-                                          );
-                                        }
-                                          Navigator.of(context).push(MaterialPageRoute(
-                                            builder: (context) =>
-                                              Tasks(taskName: namePasser),
-                                          )
-                                        );
-                                    }
-                                    catch(e){
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                            title: Text('Wait!'),
-                                            content: Text('Please wait while we upload your file(s)'),
-                                          )
-                                      );
-                                    }
-                                  }
+                                  SizedBox(width: 10),
+                                  Checkbox(
+                                    value: this.value,
+                                    onChanged: (bool value) {
+                                      setState(() {
+                                        this.value = value;
+                                      });
+                                      print(value);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              (value)
+                                  ?Padding(
+                                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    ElevatedButton(
+                                      onPressed: () async => imageUrl = await _openFileImage(),
+                                      child: const Text("Open Image Picker"),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ):Container(),
+                              SizedBox(height: 25,),
+                              NiceButton(
+                                width: 500,
+                                elevation: 1.0,
+                                radius: 52.0,
+                                text: " Submit",
+                                background: Colors.black,
+                                onPressed: () async {
+                                  try {
+                                      pathPasser.updateData({
+                                          "medialink": await audioRef.getDownloadURL(),
+                                          "tasktype": "freetext",
+                                          "prompt": promptEditingController.text.trim()
+                                      }
+                                    );
+                                      if (value) {
+                                        pathPasser.updateData({
+                                          "imagelink": await imageRef.getDownloadURL(),
+                                        }
+                                        );
+                                      }
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) =>
+                                            Tasks(taskName: namePasser),
+                                        )
+                                      );
+                                  }
+                                  catch(e){
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                          title: Text('Wait!'),
+                                          content: Text('Please wait while we upload your file(s)'),
+                                        )
+                                    );
+                                  }
+                                }
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    )
-                ),
-              ],
-            ),
+                      ),
+                    ],
+                  )
+              ),
+            ],
           ),
         ));
   }
@@ -1334,245 +1324,210 @@ class _videoPerception extends State<videoPerception> {
             ),
           ),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Container( // image below the top bar
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      'assets/bg.jpg',
-                      fit: BoxFit.cover,
-                    ),
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bg.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  left:MediaQuery.of(context).size.width * 0.35,
-                  top: MediaQuery.of(context).size.height * 0.42,
-                  child: Card(
-                    elevation: 8.0,
-                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                    child: Container(
-                        margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                        child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
-                  ),
+              ),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.35,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
                 ),
-                Center(
-                    child: Column(
-                      children: [
-                        Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                        SizedBox(height: 175,),
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 2)
-                          ),
-                          margin: const EdgeInsets.all(10.0),
-                          width: 1500.0,
-                          height: 500.0,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: promptEditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Question Prompt',
-                                    ),
+              ),
+              Center(
+                  child: Column(
+                    children: [
+                      Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2)
+                        ),
+                        margin: const EdgeInsets.all(10.0),
+                        width: 1500.0,
+                        height: 500.0,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: promptEditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Question Prompt',
                                   ),
                                 ),
-                                (isyoutube)
-                                ?Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: mediaEditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Youtube Video Link',
-                                    ),
+                              ),
+                              (isyoutube)
+                              ?Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: mediaEditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Youtube Video Link',
                                   ),
-                                ):Padding(
-                                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                                  child: Column(
+                                ),
+                              ):Padding(
+                                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    ElevatedButton(
+                                      onPressed: () async => videoUrl = await _openFileMedia(),
+                                      child: const Text("Open Image Picker"),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              DropdownButton<String>(
+                                value: videoType,
+                                icon: Icon(Icons.arrow_downward),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: TextStyle(color: Colors.deepPurple),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.black,
+                                ),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    videoType = newValue;
+                                  });
+                                  _toggle();
+                                },
+                                items: <String>['YouTube Link', 'Upload Video']
+                                    .map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                              DropdownButton<String>(
+                                value: dropdownValue,
+                                icon: Icon(Icons.arrow_downward),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: TextStyle(color: Colors.deepPurple),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.black,
+                                ),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue;
+                                  });
+                                  _toggle();
+                                },
+                                items: <String>['Free Text', 'Multiple Choice']
+                                    .map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                              (_visible)
+                              ?Column(
                                     children: <Widget>[
-                                      ElevatedButton(
-                                        onPressed: () async => videoUrl = await _openFileMedia(),
-                                        child: const Text("Open Image Picker"),
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: TextField(
+                                          controller: correctEditingController,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Correct Answer',
+                                          ),
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                ),
 
-                                DropdownButton<String>(
-                                  value: videoType,
-                                  icon: Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: TextStyle(color: Colors.deepPurple),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Colors.black,
-                                  ),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      videoType = newValue;
-                                    });
-                                    _toggle();
-                                  },
-                                  items: <String>['YouTube Link', 'Upload Video']
-                                      .map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                                DropdownButton<String>(
-                                  value: dropdownValue,
-                                  icon: Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: TextStyle(color: Colors.deepPurple),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Colors.black,
-                                  ),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      dropdownValue = newValue;
-                                    });
-                                    _toggle();
-                                  },
-                                  items: <String>['Free Text', 'Multiple Choice']
-                                      .map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                                (_visible)
-                                ?Column(
-                                      children: <Widget>[
-                                        Container(
-                                          padding: EdgeInsets.all(10),
-                                          child: TextField(
-                                            controller: correctEditingController,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              labelText: 'Correct Answer',
-                                            ),
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: TextField(
+                                          controller: answer2EditingController,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Multiple Choice Answer 2',
                                           ),
                                         ),
+                                      ),
 
-                                        Container(
-                                          padding: EdgeInsets.all(10),
-                                          child: TextField(
-                                            controller: answer2EditingController,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              labelText: 'Multiple Choice Answer 2',
-                                            ),
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: TextField(
+                                          controller: answer3EditingController,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Multi Choice Answer 3',
                                           ),
                                         ),
-
-                                        Container(
-                                          padding: EdgeInsets.all(10),
-                                          child: TextField(
-                                            controller: answer3EditingController,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              labelText: 'Multi Choice Answer 3',
-                                            ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: TextField(
+                                          controller: answer4EditingController,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Multi Choice Answer 4',
                                           ),
                                         ),
-                                        Container(
-                                          padding: EdgeInsets.all(10),
-                                          child: TextField(
-                                            controller: answer4EditingController,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              labelText: 'Multi Choice Answer 4',
-                                            ),
-                                          ),
+                                      ),
+
+                                      DropdownButton<String>(
+                                        value: retryFlag,
+                                        icon: Icon(Icons.arrow_downward),
+                                        iconSize: 24,
+                                        elevation: 16,
+                                        style: TextStyle(color: Colors.deepPurple),
+                                        underline: Container(
+                                          height: 2,
+                                          color: Colors.black,
                                         ),
-
-                                        DropdownButton<String>(
-                                          value: retryFlag,
-                                          icon: Icon(Icons.arrow_downward),
-                                          iconSize: 24,
-                                          elevation: 16,
-                                          style: TextStyle(color: Colors.deepPurple),
-                                          underline: Container(
-                                            height: 2,
-                                            color: Colors.black,
-                                          ),
-                                          onChanged: (String newValue) {
-                                            setState(() {
-                                              retryFlag = newValue;
-                                            });
-                                            _toggle();
-                                          },
-                                          items: <String>['NONE', 'SUGGEST', 'REQUIRE']
-                                              .map<DropdownMenuItem<String>>((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
-                                        ),
-
-                                      ]
-                                  ):Container(),
-
-                                NiceButton(
-                                  width: 500,
-                                  elevation: 1.0,
-                                  radius: 52.0,
-                                  text: " Submit",
-                                  background: Colors.black,
-                                  onPressed: () async{
-                                    try {
-                                      if (isyoutube) {
-                                        if (_visible) {
-                                          List pass = [
-                                            correctEditingController.text.trim(),
-                                            answer2EditingController.text.trim(),
-                                            answer3EditingController.text.trim(),
-                                            answer4EditingController.text.trim()
-                                          ];
-                                          pass.shuffle();
-                                          pathPasser.updateData(
-                                              {
-
-                                                "medialink": mediaEditingController.text.trim(),
-                                                "tasktype": "video",
-                                                "isyoutube": isyoutube,
-                                                "multichoices": pass,
-                                                "correctchoice": correctEditingController.text.trim(),
-                                                "retryflag": retryFlag,
-                                                "prompt": promptEditingController.text.trim()
-                                              }
+                                        onChanged: (String newValue) {
+                                          setState(() {
+                                            retryFlag = newValue;
+                                          });
+                                          _toggle();
+                                        },
+                                        items: <String>['NONE', 'SUGGEST', 'REQUIRE']
+                                            .map<DropdownMenuItem<String>>((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
                                           );
-                                        }
+                                        }).toList(),
+                                      ),
 
-                                        else {
-                                          pathPasser.updateData(
-                                              {
-                                                "isyoutube": isyoutube,
-                                                "medialink": mediaEditingController.text.trim(),
-                                                "tasktype": "video",
-                                                "prompt": promptEditingController.text.trim()
-                                              }
-                                          );
-                                        }
-                                      }
+                                    ]
+                                ):Container(),
 
-                                      else {
+                              NiceButton(
+                                width: 500,
+                                elevation: 1.0,
+                                radius: 52.0,
+                                text: " Submit",
+                                background: Colors.black,
+                                onPressed: () async{
+                                  try {
+                                    if (isyoutube) {
+                                      if (_visible) {
                                         List pass = [
                                           correctEditingController.text.trim(),
                                           answer2EditingController.text.trim(),
@@ -1580,59 +1535,92 @@ class _videoPerception extends State<videoPerception> {
                                           answer4EditingController.text.trim()
                                         ];
                                         pass.shuffle();
-                                        if (_visible) {
-                                          pathPasser.updateData(
-                                              {
+                                        pathPasser.updateData(
+                                            {
 
-                                                "medialink": await videoRef.getDownloadURL(),
-                                                "tasktype": "video",
-                                                "isyoutube": isyoutube,
-                                                "multichoices": pass,
-                                                "correctchoice": correctEditingController.text.trim(),
-                                                "retryflag": retryFlag,
-                                                "prompt": promptEditingController.text.trim()
-                                              }
-                                          );
-                                        }
-
-                                        else {
-                                          pathPasser.updateData(
-                                              {
-                                                "isyoutube": isyoutube,
-                                                "medialink": await videoRef.getDownloadURL(),
-                                                "tasktype": "video",
-                                                "prompt": promptEditingController.text.trim()
-                                              }
-                                          );
-                                        }
+                                              "medialink": mediaEditingController.text.trim(),
+                                              "tasktype": "video",
+                                              "isyoutube": isyoutube,
+                                              "multichoices": pass,
+                                              "correctchoice": correctEditingController.text.trim(),
+                                              "retryflag": retryFlag,
+                                              "prompt": promptEditingController.text.trim()
+                                            }
+                                        );
                                       }
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            Tasks(
-                                                taskName: namePasser),
-                                      )
-                                      );
+
+                                      else {
+                                        pathPasser.updateData(
+                                            {
+                                              "isyoutube": isyoutube,
+                                              "medialink": mediaEditingController.text.trim(),
+                                              "tasktype": "video",
+                                              "prompt": promptEditingController.text.trim()
+                                            }
+                                        );
+                                      }
                                     }
-                                    catch(e){
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                            title: Text('Wait!'),
-                                            content: Text('Please wait while we upload your file(s)'),
-                                          )
-                                      );
+
+                                    else {
+                                      List pass = [
+                                        correctEditingController.text.trim(),
+                                        answer2EditingController.text.trim(),
+                                        answer3EditingController.text.trim(),
+                                        answer4EditingController.text.trim()
+                                      ];
+                                      pass.shuffle();
+                                      if (_visible) {
+                                        pathPasser.updateData(
+                                            {
+
+                                              "medialink": await videoRef.getDownloadURL(),
+                                              "tasktype": "video",
+                                              "isyoutube": isyoutube,
+                                              "multichoices": pass,
+                                              "correctchoice": correctEditingController.text.trim(),
+                                              "retryflag": retryFlag,
+                                              "prompt": promptEditingController.text.trim()
+                                            }
+                                        );
+                                      }
+
+                                      else {
+                                        pathPasser.updateData(
+                                            {
+                                              "isyoutube": isyoutube,
+                                              "medialink": await videoRef.getDownloadURL(),
+                                              "tasktype": "video",
+                                              "prompt": promptEditingController.text.trim()
+                                            }
+                                        );
+                                      }
                                     }
-                                  },
-                                ),
-                              ],
-                            ),
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          Tasks(
+                                              taskName: namePasser),
+                                    )
+                                    );
+                                  }
+                                  catch(e){
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                          title: Text('Wait!'),
+                                          content: Text('Please wait while we upload your file(s)'),
+                                        )
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    )
-                ),
-              ],
-            ),
+                      ),
+                    ],
+                  )
+              ),
+            ],
           ),
         ));
   }
@@ -1712,153 +1700,151 @@ class _constrainedProdState extends State<constrainedProd> {
             ),
           ),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Container( // image below the top bar
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      'assets/bg.jpg',
-                      fit: BoxFit.cover,
-                    ),
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bg.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  left:MediaQuery.of(context).size.width * 0.35,
-                  top: MediaQuery.of(context).size.height * 0.42,
-                  child: Card(
-                    elevation: 8.0,
-                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                    child: Container(
-                        margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                        child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
-                  ),
+              ),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.35,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
                 ),
-                Center(
-                    child: Column(
-                      children: [
-                        Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                        SizedBox(height: 175,),
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 2)
-                          ),
-                          margin: const EdgeInsets.all(10.0),
-                          width: 1500.0,
-                          height: 500.0,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: promptEditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Question Prompt',
-                                    ),
+              ),
+              Center(
+                  child: Column(
+                    children: [
+                      Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2)
+                        ),
+                        margin: const EdgeInsets.all(10.0),
+                        width: 1500.0,
+                        height: 500.0,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: promptEditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Question Prompt',
                                   ),
                                 ),
+                              ),
 
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: correctEditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Correct Choice',
-                                    ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: correctEditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Correct Choice',
                                   ),
                                 ),
+                              ),
 
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Include uploaded image: ',
-                                      style: TextStyle(fontSize: 17.0),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Checkbox(
-                                      value: this.value,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          this.value = value;
-                                        });
-                                        print(value);
-                                      },
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Include uploaded image: ',
+                                    style: TextStyle(fontSize: 17.0),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Checkbox(
+                                    value: this.value,
+                                    onChanged: (bool value) {
+                                      setState(() {
+                                        this.value = value;
+                                      });
+                                      print(value);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              (value)
+                                  ?Padding(
+                                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    ElevatedButton(
+                                      onPressed: () async => imageUrl = await _openFileImage(),
+                                      child: const Text("Open Image Picker"),
                                     ),
                                   ],
                                 ),
-                                (value)
-                                    ?Padding(
-                                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ElevatedButton(
-                                        onPressed: () async => imageUrl = await _openFileImage(),
-                                        child: const Text("Open Image Picker"),
-                                      ),
-                                    ],
-                                  ),
-                                ):Container(),
+                              ):Container(),
 
-                                NiceButton(
-                                  width: 500,
-                                  elevation: 1.0,
-                                  radius: 52.0,
-                                  text: " Submit",
-                                  background: Colors.black,
-                                  onPressed: () async{
-                                    try {
+                              NiceButton(
+                                width: 500,
+                                elevation: 1.0,
+                                radius: 52.0,
+                                text: " Submit",
+                                background: Colors.black,
+                                onPressed: () async{
+                                  try {
+                                    pathPasser.updateData(
+                                        {
+                                          "tasktype": "constproduction",
+                                          "correctchoice": correctEditingController.text.trim(),
+                                          "prompt": promptEditingController.text.trim()
+                                        }
+                                    );
+
+                                    if (value)
+                                    {
                                       pathPasser.updateData(
                                           {
-                                            "tasktype": "constproduction",
-                                            "correctchoice": correctEditingController.text.trim(),
-                                            "prompt": promptEditingController.text.trim()
+                                            "imagelink": await imageRef.getDownloadURL(),
                                           }
                                       );
-
-                                      if (value)
-                                      {
-                                        pathPasser.updateData(
-                                            {
-                                              "imagelink": await imageRef.getDownloadURL(),
-                                            }
-                                        );
-                                      }
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            Tasks(
-                                                taskName: namePasser),
-                                      )
-                                      );
                                     }
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          Tasks(
+                                              taskName: namePasser),
+                                    )
+                                    );
+                                  }
 
-                                    catch(e){
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                            title: Text('Wait!'),
-                                            content: Text('Please wait while we upload your file(s)'),
-                                          )
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
+                                  catch(e){
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                          title: Text('Wait!'),
+                                          content: Text('Please wait while we upload your file(s)'),
+                                        )
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    )
-                ),
-              ],
-            ),
+                      ),
+                    ],
+                  )
+              ),
+            ],
           ),
         ));
   }
@@ -1936,141 +1922,139 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
             ),
           ),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Container( // image below the top bar
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      'assets/bg.jpg',
-                      fit: BoxFit.cover,
-                    ),
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bg.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  left:MediaQuery.of(context).size.width * 0.35,
-                  top: MediaQuery.of(context).size.height * 0.42,
-                  child: Card(
-                    elevation: 8.0,
-                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                    child: Container(
-                        margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                        child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
-                  ),
+              ),
+              Positioned(
+                left:MediaQuery.of(context).size.width * 0.35,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text("Create Task",style: TextStyle(fontSize:50 ),)),
                 ),
-                Center(
-                    child: Column(
-                      children: [
-                        Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
-                        SizedBox(height: 175,),
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 2)
-                          ),
-                          margin: const EdgeInsets.all(10.0),
-                          width: 1500.0,
-                          height: 500.0,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: TextField(
-                                    controller: promptEditingController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Question Prompt',
-                                    ),
+              ),
+              Center(
+                  child: Column(
+                    children: [
+                      Image(image: AssetImage('assets/banner.png'),height:350 ,width: 750,),
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2)
+                        ),
+                        margin: const EdgeInsets.all(10.0),
+                        width: 1500.0,
+                        height: 500.0,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Text("Enter Course Information below",style: TextStyle(fontSize: 20),),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: promptEditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Question Prompt',
                                   ),
                                 ),
+                              ),
 
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Include uploaded image: ',
-                                      style: TextStyle(fontSize: 17.0),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Checkbox(
-                                      value: this.value,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          this.value = value;
-                                        });
-                                        print(value);
-                                      },
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Include uploaded image: ',
+                                    style: TextStyle(fontSize: 17.0),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Checkbox(
+                                    value: this.value,
+                                    onChanged: (bool value) {
+                                      setState(() {
+                                        this.value = value;
+                                      });
+                                      print(value);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              (value)
+                                  ?Padding(
+                                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    ElevatedButton(
+                                      onPressed: () async => imageUrl = await _openFileImage(),
+                                      child: const Text("Open Image Picker"),
                                     ),
                                   ],
                                 ),
-                                (value)
-                                    ?Padding(
-                                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ElevatedButton(
-                                        onPressed: () async => imageUrl = await _openFileImage(),
-                                        child: const Text("Open Image Picker"),
-                                      ),
-                                    ],
-                                  ),
-                                ):Container(),
+                              ):Container(),
 
-                                NiceButton(
-                                  width: 500,
-                                  elevation: 1.0,
-                                  radius: 52.0,
-                                  text: " Submit",
-                                  background: Colors.black,
-                                  onPressed: () async{
-                                    try {
+                              NiceButton(
+                                width: 500,
+                                elevation: 1.0,
+                                radius: 52.0,
+                                text: " Submit",
+                                background: Colors.black,
+                                onPressed: () async{
+                                  try {
+                                    pathPasser.updateData(
+                                        {
+                                          "tasktype": "unconstproduction",
+                                          "prompt": promptEditingController.text.trim()
+                                        }
+                                    );
+
+                                    if (value)
+                                    {
                                       pathPasser.updateData(
-                                          {
-                                            "tasktype": "unconstproduction",
-                                            "prompt": promptEditingController.text.trim()
-                                          }
-                                      );
-
-                                      if (value)
-                                      {
-                                        pathPasser.updateData(
-                                          {
-                                            "imagelink": await imageRef.getDownloadURL(),
-                                          }
-                                        );
-                                      }
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            Tasks(
-                                                taskName: namePasser),
-                                      )
+                                        {
+                                          "imagelink": await imageRef.getDownloadURL(),
+                                        }
                                       );
                                     }
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          Tasks(
+                                              taskName: namePasser),
+                                    )
+                                    );
+                                  }
 
-                                    catch(e){
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                            title: Text('Wait!'),
-                                            content: Text('Please wait while we upload your file(s)'),
-                                          )
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
+                                  catch(e){
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                          title: Text('Wait!'),
+                                          content: Text('Please wait while we upload your file(s)'),
+                                        )
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    )
-                ),
-              ],
-            ),
+                      ),
+                    ],
+                  )
+              ),
+            ],
           ),
         ));
   }

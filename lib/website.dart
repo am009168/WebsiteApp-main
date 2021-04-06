@@ -62,7 +62,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar:true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
@@ -87,120 +87,118 @@ class _FirstScreenState extends State<FirstScreen> {
           ),
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container( // image below the top bar
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    'assets/bgG.jpg',
-                    fit: BoxFit.cover,
-                  ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Container(
+              alignment: Alignment.topCenter,// image below the top bar
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.45,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  'assets/bgG.jpg',
+                  fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                left:MediaQuery.of(context).size.width * 0.38,
-                top: MediaQuery.of(context).size.height * 0.42,
-                child: Card(
-                  elevation: 8.0,
-                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                  child: Container(
-                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                      child: Text('Welcome!',style: TextStyle(fontSize:50 ),)),
-                ),
+            ),
+            Positioned(
+              left:MediaQuery.of(context).size.width * 0.38,
+              top: MediaQuery.of(context).size.height * 0.42,
+              child: Card(
+                elevation: 8.0,
+                margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                    margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                    child: Text('Welcome!',style: TextStyle(fontSize:50 ),)),
               ),
-              Center(
-                child: Column(
-                  children: [
-                    SizedBox(height: 50,),
-                    Image(image: AssetImage('assets/course.png'),height:350 ,width: 750,),
-                    SizedBox(height: 175,),
-                    Text("Current Course List ",style: TextStyle(fontSize:25 )),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: 2)
-                      ),
-                      margin: const EdgeInsets.all(10.0),
-                      width: 1500.0,
-                      height: 500.0,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            StreamBuilder<QuerySnapshot>(
-                              stream: coursePath.snapshots(),
-                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text('Something went wrong');
-                                }
+            ),
+            Center(
+              child: Column(
+                children: [
+                  Image(image: AssetImage('assets/course.png'),height:350 ,width: 750,),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                  Text("Current Course List ",style: TextStyle(fontSize:25 )),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 2)
+                    ),
+                    margin: const EdgeInsets.all(10.0),
+                    width: 1500.0,
+                    height: 500.0,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          StreamBuilder<QuerySnapshot>(
+                            stream: coursePath.snapshots(),
+                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Something went wrong');
+                              }
 
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Text("Loading");
-                                }
-                                return new ListView(
-                                  shrinkWrap: true,
-                                  children: snapshot.data.documents.map((DocumentSnapshot document) {
-                                    return Card(
-                                      elevation: 8.0,
-                                      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
-                                        child: new ListTile(
-                                          title: new Text(document.data()['name'], style: TextStyle(color: Colors.white),),
-                                          subtitle: Row(
-                                            children: [
-                                              Icon(Icons.linear_scale, color: Colors.white),
-                                              Text('  '),
-                                              new Text(document.data()['prefix'], style: TextStyle(color: Colors.white)),
-                                            ],
-                                          ),
-                                          leading:  Container(
-                                            decoration: new BoxDecoration(
-                                                border: new Border(
-                                                    right: new BorderSide(width: 1.0, color: Colors.white24))),
-                                            child: IconButton(
-                                                icon: Icon(Icons.info, color: Colors.white,),
-                                                tooltip: 'Get Lesson Information',
-                                                onPressed: () {
-                                                  setState(() {
-                                                  });
-                                                  Navigator.of(context).push(MaterialPageRoute(
-                                                    builder: (context) => courseInfo(
-                                                      courseName: document.data()["name"],),
-                                                  )
-                                                  );}
-                                            ),
-                                          ),
-                                          trailing: IconButton(
-                                            icon: Icon(Icons.arrow_right, color: Colors.white,),
-                                            tooltip: 'Get Course Information',
-                                            onPressed: () {
-                                              Navigator.of(context).push(MaterialPageRoute(
-                                                  builder: (context) => ModulePage(
-                                                  courseName: document.data()["name"],
-                                                  courseID: document.data()['id'],),
-                                              )
-                                              );},
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Text("Loading");
+                              }
+                              return new ListView(
+                                shrinkWrap: true,
+                                children: snapshot.data.documents.map((DocumentSnapshot document) {
+                                  return Card(
+                                    elevation: 8.0,
+                                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                                      child: new ListTile(
+                                        title: new Text(document.data()['name'], style: TextStyle(color: Colors.white),),
+                                        subtitle: Row(
+                                          children: [
+                                            Icon(Icons.linear_scale, color: Colors.white),
+                                            Text('  '),
+                                            new Text(document.data()['prefix'], style: TextStyle(color: Colors.white)),
+                                          ],
+                                        ),
+                                        leading:  Container(
+                                          decoration: new BoxDecoration(
+                                              border: new Border(
+                                                  right: new BorderSide(width: 1.0, color: Colors.white24))),
+                                          child: IconButton(
+                                              icon: Icon(Icons.info, color: Colors.white,),
+                                              tooltip: 'Get Lesson Information',
+                                              onPressed: () {
+                                                setState(() {
+                                                });
+                                                Navigator.of(context).push(MaterialPageRoute(
+                                                  builder: (context) => courseInfo(
+                                                    courseName: document.data()["name"],),
+                                                )
+                                                );}
                                           ),
                                         ),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.arrow_right, color: Colors.white,),
+                                          tooltip: 'Get Course Information',
+                                          onPressed: () {
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (context) => ModulePage(
+                                                courseName: document.data()["name"],
+                                                courseID: document.data()['id'],),
+                                            )
+                                            );},
+                                        ),
                                       ),
-                                    );
-                                  }).toList(),
-                                );
-                              },
-                            ),
-                            SizedBox(height: 10),
-                          ],
-                        ),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          ),
+                          SizedBox(height: 10),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -333,183 +331,168 @@ class _CreateCourseState extends State<CreateCourse> {
             ),
           ),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Container( // image below the top bar
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      'assets/bgG.jpg',
-                      fit: BoxFit.cover,
-                    ),
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container( // image below the top bar
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/bgG.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  left:MediaQuery.of(context).size.width * 0.35,
-                  top: MediaQuery.of(context).size.height * 0.42,
-                  child: Card(
-                    elevation: 8.0,
-                    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                    child: Container(
-                        margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                        child: Text("Create Course",style: TextStyle(fontSize:50 ),)),
-                  ),
+              ),
+              Positioned(
+                right: MediaQuery.of(context).size.width * 0.35,
+                top: MediaQuery.of(context).size.height * 0.42,
+                child: Card(
+                  elevation: 8.0,
+                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  child: Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                      child: Text("Create Course",style: TextStyle(fontSize:50 ),)),
                 ),
-                Center(
-                  child: Column(
-                    children: [
-                      Image(image: AssetImage('assets/course.png'),height:350 ,width: 750,),
-                      SizedBox(height: 175,),
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 2)
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    Image(image: AssetImage('assets/course.png'),height:350 ,width: 750,),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.32,),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 2)
+                      ),
+                      margin: const EdgeInsets.all(10.0),
+                      width: 1500.0,
+                      height: 500.0,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          verticalDirection: VerticalDirection.down,
+                          children: <Widget>[
+                          Column(
+                          children: [
+                            Container(
+                              child: TextField(
+                                keyboardType: TextInputType.text,
+                                maxLines: 1,
+                                autofocus: false,
+                                cursorColor: Colors.blue,
+                                maxLengthEnforced: true,
+                                controller: nameEditingController,
+                                decoration: InputDecoration(
+                                  labelText: "Course Name",
+                                  prefixIcon: Icon(Icons.folder),
+                                  //Unfocus Text is grey
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  //Focued Text is blue
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.blue),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: TextField(
+                                keyboardType: TextInputType.text,
+                                maxLines: 1,
+                                autofocus: false,
+                                cursorColor: Colors.blue,
+                                maxLength: 8,
+                                maxLengthEnforced: true,
+                                controller: prefixEditingController,
+                                decoration: InputDecoration(
+                                  labelText: "Prefix for Course",
+                                  prefixIcon: Icon(Icons.folder),
+                                  //Unfocus Text is grey
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  //Focued Text is blue
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.blue),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        margin: const EdgeInsets.all(10.0),
-                        width: 1500.0,
-                        height: 500.0,
-                        child: SingleChildScrollView(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Set Open Date and Close Date: ',
+                              style: TextStyle(fontSize: 17.0),
+                            ),
+                            SizedBox(width: 10),
+                            Checkbox(
+                              value: this.value,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  this.value = value;
+                                });
+                                print(value);
+                              },
+                            ),
+                          ],
+                        ),
+                        (value)
+                        ?Container(
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            verticalDirection: VerticalDirection.down,
-                            children: <Widget>[
-                            Column(
                             children: [
-                              Container(
-                                child: TextField(
-                                  keyboardType: TextInputType.text,
-                                  maxLines: 1,
-                                  autofocus: false,
-                                  cursorColor: Colors.blue,
-                                  maxLengthEnforced: true,
-                                  controller: nameEditingController,
-                                  decoration: InputDecoration(
-                                    labelText: "Course Name",
-                                    prefixIcon: Icon(Icons.folder),
-                                    //Unfocus Text is grey
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey),
-                                    ),
-                                    //Focued Text is blue
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.blue),
-                                    ),
-                                  ),
-                                ),
+                              Text("Date open: " + "${selectedDateOpen.toLocal()}".split(' ')[0]),
+                              SizedBox(height: 20.0,),
+                              RaisedButton(
+                                onPressed: () => _selectDateOpen(context),
+                                child: Text('Select Open Date'),
                               ),
-                              Container(
-                                child: TextField(
-                                  keyboardType: TextInputType.text,
-                                  maxLines: 1,
-                                  autofocus: false,
-                                  cursorColor: Colors.blue,
-                                  maxLength: 8,
-                                  maxLengthEnforced: true,
-                                  controller: prefixEditingController,
-                                  decoration: InputDecoration(
-                                    labelText: "Prefix for Course",
-                                    prefixIcon: Icon(Icons.folder),
-                                    //Unfocus Text is grey
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey),
-                                    ),
-                                    //Focued Text is blue
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.blue),
-                                    ),
-                                  ),
-                                ),
+                              SizedBox(height: 50.0,),
+                              Text("Date close: " + "${selectedDateClose.toLocal()}".split(' ')[0]),
+                              SizedBox(height: 20.0,),
+                              RaisedButton(
+                                onPressed: () => _selectDateClose(context),
+                                child: Text('Select Close Date'),
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Set Open Date and Close Date: ',
-                                style: TextStyle(fontSize: 17.0),
-                              ),
-                              SizedBox(width: 10),
-                              Checkbox(
-                                value: this.value,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    this.value = value;
-                                  });
-                                  print(value);
-                                },
-                              ),
-                            ],
-                          ),
-                          (value)
-                          ?Container(
-                            child: Column(
+                        ):Container(),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("Date open: " + "${selectedDateOpen.toLocal()}".split(' ')[0]),
-                                SizedBox(height: 20.0,),
-                                RaisedButton(
-                                  onPressed: () => _selectDateOpen(context),
-                                  child: Text('Select Open Date'),
+                                Text(
+                                  'Initialize Lesson With Open: ',
+                                  style: TextStyle(fontSize: 17.0),
                                 ),
-                                SizedBox(height: 50.0,),
-                                Text("Date close: " + "${selectedDateClose.toLocal()}".split(' ')[0]),
-                                SizedBox(height: 20.0,),
-                                RaisedButton(
-                                  onPressed: () => _selectDateClose(context),
-                                  child: Text('Select Close Date'),
+                                SizedBox(width: 10),
+                                Checkbox(
+                                  value: this.open,
+                                  onChanged: (bool value) {
+                                    setState(() {
+                                      this.open = value;
+                                    });
+                                    print(value);
+                                  },
                                 ),
                               ],
                             ),
-                          ):Container(),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Initialize Lesson With Open: ',
-                                    style: TextStyle(fontSize: 17.0),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Checkbox(
-                                    value: this.open,
-                                    onChanged: (bool value) {
-                                      setState(() {
-                                        this.open = value;
-                                      });
-                                      print(value);
-                                    },
-                                  ),
-                                ],
-                              ),
-
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.all(16),
-                              child: RaisedButton(
-                                  child: Text("Create Course"),
-                                  onPressed: () {
-                                    if (value)
-                                    {
-                                      userPath.collection('Courses').doc(nameEditingController.text.trim()).set(
-                                        {
-                                          "dateopen" : selectedDateOpen.toString(),
-                                          "dateclose": selectedDateClose.toString(),
-                                          "designerid" : firebaseUser.uid,
-                                          "isopen" : this.open,
-                                          "learnerids": [],
-                                          "id" : nameEditingController.text.trim(),
-                                          "name" : nameEditingController.text.trim(),
-                                          "prefix" : prefixEditingController.text.trim()
-                                        }
-                                      );
-                                    }
-                                    else {
-                                      userPath.collection('Courses').doc(nameEditingController.text.trim()).set(
+                        Container(
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: RaisedButton(
+                                child: Text("Create Course"),
+                                onPressed: () {
+                                  if (value)
+                                  {
+                                    userPath.collection('Courses').doc(nameEditingController.text.trim()).set(
                                       {
-                                        "dateopen" : "1999-01-21 15:00:00.000",
-                                        "dateclose" : "3021-01-21 15:00:00.000",
+                                        "dateopen" : selectedDateOpen.toString(),
+                                        "dateclose": selectedDateClose.toString(),
                                         "designerid" : firebaseUser.uid,
                                         "isopen" : this.open,
                                         "learnerids": [],
@@ -517,21 +500,34 @@ class _CreateCourseState extends State<CreateCourse> {
                                         "name" : nameEditingController.text.trim(),
                                         "prefix" : prefixEditingController.text.trim()
                                       }
-                                     );
+                                    );
+                                  }
+                                  else {
+                                    userPath.collection('Courses').doc(nameEditingController.text.trim()).set(
+                                    {
+                                      "dateopen" : "1999-01-21 15:00:00.000",
+                                      "dateclose" : "3021-01-21 15:00:00.000",
+                                      "designerid" : firebaseUser.uid,
+                                      "isopen" : this.open,
+                                      "learnerids": [],
+                                      "id" : nameEditingController.text.trim(),
+                                      "name" : nameEditingController.text.trim(),
+                                      "prefix" : prefixEditingController.text.trim()
                                     }
-                                    Navigator.pop(context, nameEditingController.text);
-                                  }),
-                            ),
+                                   );
+                                  }
+                                  Navigator.pop(context, nameEditingController.text);
+                                }),
                           ),
-              ],
-            ),
                         ),
+            ],
+          ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }
