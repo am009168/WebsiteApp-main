@@ -14,6 +14,8 @@ import 'package:flutter_app/classes/firestore_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nice_button/nice_button.dart';
 import 'package:flutter_app/Tasks.dart';
+import 'package:flutter_app/classes/firestore_services.dart';
+import 'package:flutter_app/website.dart';
 import 'package:intl/intl.dart';
 
 
@@ -366,7 +368,7 @@ class _instructionAdderState extends State<instructionAdder> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser1.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           imageUrl = await ref.getDownloadURL();
@@ -402,7 +404,7 @@ class _instructionAdderState extends State<instructionAdder> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/media/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser1.uid + "/media/" + fileName);
         audioRef = ref;
         try {
             audioUrl = await ref.getDownloadURL();
@@ -666,7 +668,7 @@ class _multipleChoice extends State<multipleChoice> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser1.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           imageUrl = await ref.getDownloadURL();
@@ -702,7 +704,7 @@ class _multipleChoice extends State<multipleChoice> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/media/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser1.uid + "/media/" + fileName);
         audioRef = ref;
         try {
             audioUrl = await ref.getDownloadURL();
@@ -871,28 +873,36 @@ class _multipleChoice extends State<multipleChoice> {
                                 ),
                               ),
 
-                              DropdownButton<String>(
-                                value: retryFlag,
-                                icon: Icon(Icons.arrow_downward),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(color: Colors.deepPurple),
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.black,
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    Text("Retry Flag: "),
+                                    DropdownButton<String>(
+                                      value: retryFlag,
+                                      icon: Icon(Icons.arrow_downward),
+                                      iconSize: 24,
+                                      elevation: 16,
+                                      style: TextStyle(color: Colors.deepPurple),
+                                      underline: Container(
+                                        height: 2,
+                                        color: Colors.black,
+                                      ),
+                                      onChanged: (String newValue) {
+                                        setState(() {
+                                          retryFlag = newValue;
+                                        });
+                                      },
+                                      items: <String>['NONE', 'SUGGEST', 'REQUIRE']
+                                          .map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
                                 ),
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    retryFlag = newValue;
-                                  });
-                                },
-                                items: <String>['NONE', 'SUGGEST', 'REQUIRE']
-                                    .map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
                               ),
 
                               NiceButton(
@@ -990,7 +1000,7 @@ class _freeTextState extends State<freeText> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser1.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           audioUrl = await ref.getDownloadURL();
@@ -1026,7 +1036,7 @@ class _freeTextState extends State<freeText> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/media/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser1.uid + "/media/" + fileName);
         audioRef = ref;
         try {
           audioUrl = await ref.getDownloadURL();
@@ -1248,7 +1258,7 @@ class _videoPerception extends State<videoPerception> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/media/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser1.uid + "/media/" + fileName);
         videoRef = ref;
         try {
           videoUrl = await ref.getDownloadURL();
@@ -1489,30 +1499,38 @@ class _videoPerception extends State<videoPerception> {
                                           ),
                                         ),
                                       ),
-
-                                      DropdownButton<String>(
-                                        value: retryFlag,
-                                        icon: Icon(Icons.arrow_downward),
-                                        iconSize: 24,
-                                        elevation: 16,
-                                        style: TextStyle(color: Colors.deepPurple),
-                                        underline: Container(
-                                          height: 2,
-                                          color: Colors.black,
+                                      
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            Text("Retry Flag: "),
+                                            DropdownButton<String>(
+                                              value: retryFlag,
+                                              icon: Icon(Icons.arrow_downward),
+                                              iconSize: 24,
+                                              elevation: 16,
+                                              style: TextStyle(color: Colors.deepPurple),
+                                              underline: Container(
+                                                height: 2,
+                                                color: Colors.black,
+                                              ),
+                                              onChanged: (String newValue) {
+                                                setState(() {
+                                                  retryFlag = newValue;
+                                                });
+                                                _toggle();
+                                              },
+                                              items: <String>['NONE', 'SUGGEST', 'REQUIRE']
+                                                  .map<DropdownMenuItem<String>>((String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ],
                                         ),
-                                        onChanged: (String newValue) {
-                                          setState(() {
-                                            retryFlag = newValue;
-                                          });
-                                          _toggle();
-                                        },
-                                        items: <String>['NONE', 'SUGGEST', 'REQUIRE']
-                                            .map<DropdownMenuItem<String>>((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
                                       ),
 
                                     ]
@@ -1657,7 +1675,7 @@ class _constrainedProdState extends State<constrainedProd> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser1.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           audioUrl = await ref.getDownloadURL();
@@ -1881,7 +1899,7 @@ class _unconstrainedProdState extends State<unconstrainedProd> {
         print(result.files.single.extension);
         Uint8List uploadfile = result.files.single.bytes;
         String fileName = result.files.single.name;
-        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser.uid + "/images/" + fileName);
+        final ref = firebase_storage.FirebaseStorage.instance.ref("designers/" + firebaseUser1.uid + "/images/" + fileName);
         imageRef = ref;
         try {
           audioUrl = await ref.getDownloadURL();

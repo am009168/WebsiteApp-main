@@ -7,6 +7,7 @@ import 'package:flutter_app/classes/firestore_services.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 var infoGetter;
 String stuff ;
 class LessonInfo extends StatefulWidget {
@@ -25,7 +26,7 @@ class _infoState extends State<LessonInfo> {
 
   void delete()
   {
-    firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
+    firestoreInstance1.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser1.uid)
         .collection('Courses').doc(modName)
         .collection('Modules').doc(lessonName)
         .collection('Lessons').doc(widget.lessonName).delete();
@@ -34,7 +35,7 @@ class _infoState extends State<LessonInfo> {
   @override
 
   Widget build(BuildContext context) {
-    infoGetter = userPath.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.lessonName);
+    infoGetter = userPath1.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.lessonName);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(

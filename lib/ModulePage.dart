@@ -2,30 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Lessons.dart';
 import 'package:flutter_app/classes/firestore_services.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_app/models/Module.dart';
-import 'package:flutter_app/providers/module_provider.dart';
-import 'package:flutter_app/utils/session.dart';
-import 'package:flutter_app/main.dart';
-import 'package:flutter_app/screens/LessonPage.dart';
-import 'dart:collection';
-import 'dart:io' as io;
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_app/main.dart';
+import 'dart:html' as html;
+
 
 var path;
 String modName;
 class ModulePage extends StatefulWidget {
-  ModulePage({Key key, this.courseID, this.courseName}) : super(key: key);
+  ModulePage({Key key, this.courseName}) : super(key: key);
   // always marked "final".
   final String courseName;
-  final String courseID ;
 
   //final String courseId;
 
@@ -36,7 +24,7 @@ class ModulePage extends StatefulWidget {
 class _ModulePageState extends State<ModulePage> {
   @override
   Widget build(BuildContext context) {
-    var coursePath = userPath.collection('Courses').doc(widget.courseName);
+    var coursePath = userPath1.collection('Courses').doc(widget.courseName);
     modName = widget.courseName;
     path = coursePath;
     return Scaffold(
@@ -44,6 +32,11 @@ class _ModulePageState extends State<ModulePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        leading: new IconButton(icon: new Icon (Icons.arrow_back),
+          onPressed:()
+          {
+            html.window.location.reload();
+          },),
         title:Container(
           child: Padding(
             padding: EdgeInsets.all(20),
@@ -354,7 +347,7 @@ class _CreateModuleState extends State<CreateModule> {
                                             {
                                               "dateopen": selectedDateOpen.toString(),
                                               "dateclose": selectedDateClose.toString(),
-                                              "designerid": firebaseUser.uid,
+                                              "designerid": firebaseUser1.uid,
                                               "isopen": this.open,
                                               "id": nameEditingController.text.trim(),
                                               "name": nameEditingController.text.trim(),
@@ -366,7 +359,7 @@ class _CreateModuleState extends State<CreateModule> {
                                             {
                                               "dateopen" : "1999-01-21 15:00:00.000",
                                               "dateclose" : "3021-01-21 15:00:00.000",
-                                              "designerid": firebaseUser.uid,
+                                              "designerid": firebaseUser1.uid,
                                               "isopen": this.open,
                                               "id": nameEditingController.text.trim(),
                                               "name": nameEditingController.text.trim(),

@@ -11,10 +11,10 @@ import 'package:flutter_app/models/Task.dart';
 import 'package:flutter_app/utils/session.dart';
 import 'package:flutter_app/utils/utils.dart';
 
-var firebaseUser = FirebaseAuth.instance.currentUser;
-final firestoreInstance = FirebaseFirestore.instance;
-var userPath = firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid);
-var coursePath = userPath.collection('Courses');
+var firebaseUser1 = FirebaseAuth.instance.currentUser;
+final firestoreInstance1 = FirebaseFirestore.instance;
+var userPath1 = firestoreInstance1.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser1.uid);
+var coursePath = userPath1.collection('Courses');
 
 class FirestoreService {
   //Grab the link to our service

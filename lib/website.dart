@@ -1,48 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/courseInfo.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_app/classes/firestore_services.dart';
+import 'package:flutter_app/ModulePage.dart';
 import 'package:flutter_app/authentication.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_app/ModulePage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_app/main.dart';
 
-var firebaseUser = FirebaseAuth.instance.currentUser;
-final firestoreInstance = FirebaseFirestore.instance;
-var userPath = firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid);
-var coursePath = userPath.collection('Courses');
-var courseList  = [];
-//Joe: Change this to a Stateful widget so we can add new courses and display them.
-//Use the setState() method to reflect UI changes.
-//TODO: Look up how to format and use stateful widgets, try and get them working by Tuesday
-//TODO: Try and add new course widgets to first screen, that way we can test on
-//Tuesday.
-
-class ExpenseList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new StreamBuilder<QuerySnapshot>(
-        stream: coursePath.snapshots()  ,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) return new Text("There is no expense");
-          return new ListView(children: getExpenseItems(snapshot));
-        });
-  }
-
-  getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.docs
-        .map((doc) => new ListTile(title: new Text(doc.data()["name"]), subtitle: new Text(doc.data()["prefix"])))
-        .toList();
-  }
-}
+var coursePath = userPath1.collection('Courses');
 
 class FirstScreen extends StatefulWidget {
   FirstScreen({Key key}) : super(key: key);
-
   @override
   _FirstScreenState createState() => _FirstScreenState();
 }
@@ -50,9 +18,6 @@ class FirstScreen extends StatefulWidget {
 class _FirstScreenState extends State<FirstScreen> {
   List<Widget> courses;
   String coursename;
-  void initState() {
-    super.initState();
-  }
 
   @override
   _navigateToCreatCourse(BuildContext context) async {
@@ -61,11 +26,22 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   Widget build(BuildContext context) {
+    setState(() {}) ;
     return Scaffold(
       extendBodyBehindAppBar:true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        leading: IconButton(
+            icon: Icon(Icons.logout),
+            tooltip: "Sign Out",
+            onPressed: () {
+              context.read<Authentication>().signOut();
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => new AuthenticationWrapper()));
+            }),
         title:Container(
           child: Padding(
             padding: EdgeInsets.all(20),
@@ -178,8 +154,8 @@ class _FirstScreenState extends State<FirstScreen> {
                                           onPressed: () {
                                             Navigator.of(context).push(MaterialPageRoute(
                                                 builder: (context) => ModulePage(
-                                                courseName: document.data()["name"],
-                                                courseID: document.data()['id'],),
+                                                courseName: document.data()["name"]
+                                                ),
                                             )
                                             );},
                                         ),
@@ -489,11 +465,11 @@ class _CreateCourseState extends State<CreateCourse> {
                                 onPressed: () {
                                   if (value)
                                   {
-                                    userPath.collection('Courses').doc(nameEditingController.text.trim()).set(
+                                    userPath1.collection('Courses').doc(nameEditingController.text.trim()).set(
                                       {
                                         "dateopen" : selectedDateOpen.toString(),
                                         "dateclose": selectedDateClose.toString(),
-                                        "designerid" : firebaseUser.uid,
+                                        "designerid" : firebaseUser1.uid,
                                         "isopen" : this.open,
                                         "learnerids": [],
                                         "id" : nameEditingController.text.trim(),
@@ -503,11 +479,11 @@ class _CreateCourseState extends State<CreateCourse> {
                                     );
                                   }
                                   else {
-                                    userPath.collection('Courses').doc(nameEditingController.text.trim()).set(
+                                    userPath1.collection('Courses').doc(nameEditingController.text.trim()).set(
                                     {
                                       "dateopen" : "1999-01-21 15:00:00.000",
                                       "dateclose" : "3021-01-21 15:00:00.000",
-                                      "designerid" : firebaseUser.uid,
+                                      "designerid" : firebaseUser1.uid,
                                       "isopen" : this.open,
                                       "learnerids": [],
                                       "id" : nameEditingController.text.trim(),

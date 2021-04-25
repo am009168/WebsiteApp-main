@@ -3,10 +3,6 @@ import 'package:flutter_app/LessonInfo.dart';
 import 'package:flutter_app/ModulePage.dart';
 import 'package:flutter_app/classes/firestore_services.dart';
 import 'package:flutter_app/Tasks.dart';
-import 'package:flutter_app/screens/LessonPage.dart';
-import 'dart:collection';
-import 'dart:io' as io;
-import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -27,7 +23,7 @@ class Lessons extends StatefulWidget {
 class _LessonsState extends State<Lessons> {
   @override
   Widget build(BuildContext context) {
-    var modulePath = userPath.collection('Courses').doc(modName).collection('Modules').doc(widget.LessonName);
+    var modulePath = userPath1.collection('Courses').doc(modName).collection('Modules').doc(widget.LessonName);
     print(stuff);
     path = modulePath;
     lessonName = widget.LessonName;
@@ -36,6 +32,14 @@ class _LessonsState extends State<Lessons> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        leading: new IconButton(icon: new Icon (Icons.arrow_back),
+          onPressed:()
+          {
+            Navigator.push(
+              context,
+              new MaterialPageRoute(builder: (ctxt) => new ModulePage(courseName: modName,)),
+            );
+          },),
         title:Container(
           child: Padding(
             padding: EdgeInsets.all(20),
@@ -177,7 +181,7 @@ class CreateLesson extends StatefulWidget {
 
 class _CreateLessonState extends State<CreateLesson> {
   List<Widget> course;
-  DocumentReference getID = firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
+  DocumentReference getID = firestoreInstance1.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser1.uid)
       .collection('Courses').doc(modName);
   TextEditingController nameEditingController = new TextEditingController();
 
@@ -412,7 +416,7 @@ class _CreateLessonState extends State<CreateLesson> {
                                                 "opentoall": this.openToAll,
                                                 "dateopen": selectedDateOpen.toString(),
                                                 "dateclose": selectedDateClose.toString(),
-                                                "designerid" : firebaseUser.uid,
+                                                "designerid" : firebaseUser1.uid,
                                                 "isopen" : this.open,
                                                 "id": nameEditingController.text.trim(),
                                                 "name" : nameEditingController.text.trim(),
@@ -430,7 +434,7 @@ class _CreateLessonState extends State<CreateLesson> {
                                                 "opentoall": this.openToAll,
                                                 "dateopen" : "1999-01-21 15:00:00.000",
                                                 "dateclose" : "3021-01-21 15:00:00.000",
-                                                "designerid" : firebaseUser.uid,
+                                                "designerid" : firebaseUser1.uid,
                                                 "isopen" : this.open,
                                                 "id": nameEditingController.text.trim(),
                                                 "name" : nameEditingController.text.trim(),
@@ -451,7 +455,7 @@ class _CreateLessonState extends State<CreateLesson> {
                                                 "opentoall": this.openToAll,
                                                 "dateopen": selectedDateOpen.toString(),
                                                 "dateclose": selectedDateClose.toString(),
-                                                "designerid" : firebaseUser.uid,
+                                                "designerid" : firebaseUser1.uid,
                                                 "isopen" : this.open,
                                                 "id": nameEditingController.text.trim(),
                                                 "name" : nameEditingController.text.trim(),
@@ -469,7 +473,7 @@ class _CreateLessonState extends State<CreateLesson> {
                                                 "opentoall": this.openToAll,
                                                 "dateopen" : "1999-01-21 15:00:00.000",
                                                 "dateclose" : "3021-01-21 15:00:00.000",
-                                                "designerid" : firebaseUser.uid,
+                                                "designerid" : firebaseUser1.uid,
                                                 "isopen" : this.open,
                                                 "id": nameEditingController.text.trim(),
                                                 "name" : nameEditingController.text.trim(),

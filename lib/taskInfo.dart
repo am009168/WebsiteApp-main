@@ -38,7 +38,7 @@ class _infoState extends State<taskInfo> {
     var hello;
     var check;
 
-     await firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
+     await firestoreInstance1.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser1.uid)
         .collection('Courses').doc(modName)
         .collection('Modules').doc(lessonName)
         .collection('Lessons').doc(namePasser)
@@ -69,7 +69,7 @@ class _infoState extends State<taskInfo> {
 
   void delete()
   {
-    firestoreInstance.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser.uid)
+    firestoreInstance1.collection("Users").doc('UserList').collection('Designers').doc(firebaseUser1.uid)
         .collection('Courses').doc(modName)
         .collection('Modules').doc(lessonName)
         .collection('Lessons').doc(namePasser)

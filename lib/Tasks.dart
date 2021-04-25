@@ -6,12 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_app/classes/firestore_services.dart';
 import 'package:flutter_app/taskCreater.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
 
 var finPath;
 int counter = 0;
@@ -32,7 +26,7 @@ class Tasks extends StatefulWidget {
 class _TasksState extends State<Tasks> {
   @override
   Widget build(BuildContext context) {
-    var lessonPath = userPath.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.taskName);
+    var lessonPath = userPath1.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.taskName);
     finPath = lessonPath;
     List<dynamic> tasks = List<dynamic>();
 
@@ -43,6 +37,14 @@ class _TasksState extends State<Tasks> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        leading: new IconButton(icon: new Icon (Icons.arrow_back),
+          onPressed:()
+          {
+            Navigator.push(
+              context,
+              new MaterialPageRoute(builder: (ctxt) => new Lessons(LessonName: lessonName)),
+            );
+          },),
         title:Container(
           child: Padding(
             padding: EdgeInsets.all(20),
@@ -263,7 +265,7 @@ class CreateTask extends StatelessWidget {
                                             {
                                               'orderid' : counter,
                                               "dateopen" : date,
-                                              "designerid" : firebaseUser.uid,
+                                              "designerid" : firebaseUser1.uid,
                                               "isopen" : true,
                                               "id": nameEditingController.text.trim(),
                                               "name" : nameEditingController.text.trim(),

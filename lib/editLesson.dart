@@ -51,7 +51,7 @@ class _editState extends State<editLesson> {
   @override
 
   Widget build(BuildContext context) {
-    infoGetter = userPath.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.lessonName);
+    infoGetter = userPath1.collection('Courses').doc(modName).collection('Modules').doc(lessonName).collection('Lessons').doc(widget.lessonName);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
